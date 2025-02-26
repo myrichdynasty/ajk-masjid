@@ -42,14 +42,14 @@ try {
     }
     ?>
 
-    <h2 class="text-center mt-4">SENARAI CALON JAWATANKUASA KARIAH</h2>
+    <h2 class="text-center mt-4">SENARAI CADANGAN TARIKH MESYUARAT</h2>
 
     <div class="table-responsive">
     <table class="table table-bordered text-center">
     <thead class="table-primary text-white">
     <tr>
-    <th>NO.</th>
-        <th>NAMA</th>
+        <th>NO.</th>
+        <th>NAMA MASJID</th>
         <th>CADANGAN TARIKH</th>
         <th>KEMASKINI TARIKH BARU</th>
         <th>CADANGAN MASA</th>
@@ -57,14 +57,14 @@ try {
         <th>TEMPAT</th>
         <th>STATUS</th>
         <th>KOMEN</th>
-        <th>NAMA MASJID</th>
+        <th>NAMA CADANGAN PENGERUSI MESYUARAT</th>
         <th>TINDAKAN</th>
-</thead>
+    </thead>
     </tr>
     <?php foreach ($bookings as $booking): ?>
         <tr>
             <td><?php echo htmlspecialchars($booking['booking_id']); ?></td>
-            <td><?php echo htmlspecialchars($booking['name']); ?></td>
+            <td><?php echo htmlspecialchars($booking['masjid_name']); ?></td>
             <td><?php echo htmlspecialchars($booking['date']); ?></td>
             <td>
                 <form action="updatestatus.php" method="POST">
@@ -87,7 +87,10 @@ try {
             <td>
                     <textarea name="comment" rows="2" cols="20"><?php echo htmlspecialchars($booking['comment']); ?></textarea>
             </td>
-            <td><?php echo htmlspecialchars($booking['masjid_name']); ?></td> <!-- Display masjid name -->
+            <td>
+                1.<?php echo htmlspecialchars($booking['nama_cadangan1']); ?>
+                <br>
+                2.<?php echo htmlspecialchars($booking['nama_cadangan2']); ?></td>
             <td>
                     <button type="submit" class="btn btn-primary mb-2">KEMASKINI</button>
                 </form>

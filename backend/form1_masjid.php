@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
             <th>TARIKH</th>
             <th>MASA</th>
             <th>TEMPAT</th>
-            <th>NAMA PENGERUSI</th>
+            <th>NAMA CADANGAN PENGERUSI MESYUARAT</th>
     </thead>
     </tbody>
         </tr>
@@ -157,7 +157,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
                 <td><?php echo htmlspecialchars($booking['date']); ?></td>
                 <td><?php echo date('H:i', strtotime($booking['time'])); ?></td>
                 <td><?php echo htmlspecialchars($booking['place']); ?></td>
-                <td><?php echo htmlspecialchars($booking['nama_pengerusi']); ?></td>
+                <td>
+                    1.<?php echo htmlspecialchars($booking['nama_cadangan1']); ?>
+                    <br>
+                    2.<?php echo htmlspecialchars($booking['nama_cadangan2']); ?>
+                </td>
             </tr>
         <?php endif; ?>
     </table>

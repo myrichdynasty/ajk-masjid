@@ -43,23 +43,23 @@ include('connection.php');
                     <label for="place" class="form-label">NAMA CADANGAN PENGERUSI MESYUARAT(1):</label>
                         <fieldset>
                             <p>
-                                <label for="nama_pengerusi">NAMA PENUH:</label>
-                                <input class="form-control" name="nama_pengerusi" id="nama_pengerusi" value="" type="text" />
+                                <label for="nama_cadangan1">NAMA PENUH:</label>
+                                <input class="form-control" name="nama_cadangan1" id="nama_cadangan1" value="" type="text" />
                             </p>
 
                             <p>
-                                <label for="no_ic">NO KAD PENGENALAN:</label>
-                                <input class="form-control" name="no_ic" id="no_ic" value="" type="text" />
+                                <label for="ic_cadangan1">NO KAD PENGENALAN:</label>
+                                <input class="form-control" name="ic_cadangan1" id="ic_cadangan1" value="" type="text" />
                             </p>
 
                             <p>
-                                <label for="no_phone">NO TELEFON:</label>
-                                <input class="form-control" name="no_phone" id="no_phone" value="" type="text" />
+                                <label for="phone_cadangan1">NO TELEFON:</label>
+                                <input class="form-control" name="phone_cadangan1" id="phone_cadangan1" value="" type="text" />
                             </p>
 
                             <p>
-                                <label for="email">EMAIL:</label>
-                                <input class="form-control" name="email" id="email" value="" type="text" />
+                                <label for="email_cadangan1">EMAIL:</label>
+                                <input class="form-control" name="email_cadangan1" id="email_cadangan1" value="" type="text" />
                             </p>
                         </fieldset>
                     </div>
@@ -69,23 +69,23 @@ include('connection.php');
                     <label for="place" class="form-label">NAMA CADANGAN PENGERUSI MESYUARAT(2):</label>
                         <fieldset>
                             <p>
-                                <label for="nama_pengerusi">NAMA PENUH:</label>
-                                <input class="form-control" name="nama_pengerusi" id="nama_pengerusi" value="" type="text" />
+                                <label for="nama_cadangan2">NAMA PENUH:</label>
+                                <input class="form-control" name="nama_cadangan2" id="nama_cadangan2" value="" type="text" />
                             </p>
 
                             <p>
-                                <label for="no_ic">NO KAD PENGENALAN:</label>
-                                <input class="form-control" name="no_ic" id="no_ic" value="" type="text" />
+                                <label for="ic_cadangan2">NO KAD PENGENALAN:</label>
+                                <input class="form-control" name="ic_cadangan2" id="ic_cadangan2" value="" type="text" />
                             </p>
 
                             <p>
-                                <label for="no_phone">NO TELEFON:</label>
-                                <input class="form-control" name="no_phone" id="no_phone" value="" type="text" />
+                                <label for="phone_cadangan2">NO TELEFON:</label>
+                                <input class="form-control" name="phone_cadangan2" id="phone_cadangan2" value="" type="text" />
                             </p>
 
                             <p>
-                                <label for="email">EMAIL:</label>
-                                <input class="form-control" name="email" id="email" value="" type="text" />
+                                <label for="email_cadangan2">EMAIL:</label>
+                                <input class="form-control" name="email_cadangan2" id="email_cadangan2" value="" type="text" />
                             </p>
                         </fieldset>
                     </div>

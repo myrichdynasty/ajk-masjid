@@ -100,7 +100,7 @@ try {
 <body>
 <?php require '../include/header.php'; ?>
 <div class="d-flex justify-content-center flex-wrap gap-3 text-center mt-4 mb-4">
-    <button type="button" class="btn btn-primary mb-2" disabled>MESYUARAT AGUNG TAHUNAN 123</button>
+    <button type="button" class="btn btn-primary mb-2" disabled>MESYUARAT AGUNG TAHUNAN</button>
     <a href="choosedate.php" class="mb-2">
         <button type="button" class="btn btn-primary">MESYUARAT AGUNG PENCALONAN JAWATANKUASA KARIAH</button>
     </a>
