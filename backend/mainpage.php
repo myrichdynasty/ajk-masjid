@@ -146,18 +146,6 @@ try {
                     </td>
                     <td><?php echo !empty($booking['comment']) ? htmlspecialchars($booking['comment']) : '-'; ?></td>
                     <td>
-                        <?php if ($booking['status_code'] == 1): ?>
-                            <?php if ($form['tindakan_code'] == 0): ?>
-                                <a href="../backend/form1_masjid.php" class="mb-2 ml-2">
-                                    <button type="button" class="btn btn-primary">BORANG PENCALONAN 1</button>
-                                </a>
-                            <?php else: ?>
-                                <a href="../backend/form2_masjid.php">
-                                    <button type="button" class="btn btn-primary">BORANG PENCALONAN 2</button>
-                                </a>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                        
                         <?php if ($booking['status_code'] == 0): ?>
                             <form action="../backend/cancel_booking.php" method="POST">
                                 <input type="hidden" name="booking_id" value="<?php echo $booking['booking_id']; ?>">
@@ -165,6 +153,17 @@ try {
 
                             </form>
                         <?php endif; ?>
+
+                        <?php if ($booking['tindakan_code'] == 1): ?>
+                            <a href="../backend/form1_masjid.php?booking_id=<?php echo $booking['booking_id']; ?>" class="mb-2 ml-2">
+                                <button type="button" class="btn btn-primary">BORANG PENCALONAN 1</button>
+                            </a>
+                            <?php elseif ($booking['tindakan_code'] == 2): ?>
+                                <a href="../backend/form2_masjid.php">
+                                    <button type="button" class="btn btn-primary">BORANG PENCALONAN 2</button>
+                                </a>
+                        <?php endif; ?>
+                        
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -259,5 +258,5 @@ try {
     <?php endif; ?> -->
 
     <?php require '../include/footer.php'; ?>
-
+</body>
 </html>

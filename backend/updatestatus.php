@@ -7,13 +7,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date = $_POST['date'];
     $time = $_POST['time'];
     $status_code = $_POST['status_code'];
+    $tindakan_code = 1;
     $comment = $_POST['comment'];
 
     try {
-        $stmt = $conn->prepare("UPDATE booking SET date = :date, time = :time, status_code = :status_code, comment = :comment WHERE booking_id = :booking_id");
+        $stmt = $conn->prepare("UPDATE booking SET date = :date, time = :time, status_code = :status_code, tindakan_code = :tindakan_code, comment = :comment WHERE booking_id = :booking_id");
         $stmt->bindParam(':date', $date);
         $stmt->bindParam(':time', $time);
         $stmt->bindParam(':status_code', $status_code);
+        $stmt->bindParam(':tindakan_code', $tindakan_code);
         $stmt->bindParam(':comment', $comment);
         $stmt->bindParam(':booking_id', $booking_id);
         

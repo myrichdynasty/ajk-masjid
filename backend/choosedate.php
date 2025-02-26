@@ -44,17 +44,17 @@ include('connection.php');
                         <fieldset>
                             <p>
                                 <label for="nama_cadangan1">NAMA PENUH:</label>
-                                <input class="form-control" name="nama_cadangan1" id="nama_cadangan1" value="" type="text" />
+                                <input class="form-control" name="nama_cadangan1" id="nama_cadangan1" value="" type="text" required/>
                             </p>
 
                             <p>
                                 <label for="ic_cadangan1">NO KAD PENGENALAN:</label>
-                                <input class="form-control" name="ic_cadangan1" id="ic_cadangan1" value="" type="text" />
+                                <input class="form-control" name="ic_cadangan1" id="ic_cadangan1" value="" type="text" required/>
                             </p>
 
                             <p>
                                 <label for="phone_cadangan1">NO TELEFON:</label>
-                                <input class="form-control" name="phone_cadangan1" id="phone_cadangan1" value="" type="text" />
+                                <input class="form-control" name="phone_cadangan1" id="phone_cadangan1" value="" type="text" required/>
                             </p>
 
                             <p>
@@ -70,17 +70,17 @@ include('connection.php');
                         <fieldset>
                             <p>
                                 <label for="nama_cadangan2">NAMA PENUH:</label>
-                                <input class="form-control" name="nama_cadangan2" id="nama_cadangan2" value="" type="text" />
+                                <input class="form-control" name="nama_cadangan2" id="nama_cadangan2" value="" type="text" required/>
                             </p>
 
                             <p>
                                 <label for="ic_cadangan2">NO KAD PENGENALAN:</label>
-                                <input class="form-control" name="ic_cadangan2" id="ic_cadangan2" value="" type="text" />
+                                <input class="form-control" name="ic_cadangan2" id="ic_cadangan2" value="" type="text" required/>
                             </p>
 
                             <p>
                                 <label for="phone_cadangan2">NO TELEFON:</label>
-                                <input class="form-control" name="phone_cadangan2" id="phone_cadangan2" value="" type="text" />
+                                <input class="form-control" name="phone_cadangan2" id="phone_cadangan2" value="" type="text" required/>
                             </p>
 
                             <p>
