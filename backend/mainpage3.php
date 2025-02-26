@@ -28,5 +28,5 @@ include('connection.php');
     </div>
 
     <?php require '../include/footer.php'; ?>
-</body>
+<!-- </body> -->
 </html>
