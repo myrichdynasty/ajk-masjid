@@ -97,5 +97,5 @@ try {
 </table>
 
     <?php require '../include/footer.php'; ?>
-</body>
+<!-- </body> -->
 </html>
