@@ -259,5 +259,5 @@ try {
     <?php endif; ?> -->
 
     <?php require '../include/footer.php'; ?>
-</body>
+
 </html>
