@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pencalonan Page</title>
+    <link rel="stylesheet" href="static/main.css">
+</head>
+<body>
+    <div id="pencalonanPage" class="container">
+    <img src="images/Logo Mainpp.png" alt="Masjid Logo" class="logo">
+    <h1>Tarikh Cadangan</h1>
+    <form id="pencalonanForm" action="solat_temp.sql" method="POST">
+        <label for="calendar">Pilih Tarikh:</label>
+        <input type="date" id="calendar" name="tarikh" class="calendar" required>
+
+        <div id="formSection" style="display: none;">
+            <label for="time">Masa:</label>
+            <input type="time" id="time" name="masa" required>
+
+            <label for="venue">Tempat:</label>
+            <input type="text" id="venue" name="tempat" placeholder="Masukkan tempat" required>
+
+            <button type="submit" id="submitButton">Submit</button>
+        </div>
+    </form>
+</div>
+<script src="static/js/Pencalonan.js"></script>
+</body>
+</html>

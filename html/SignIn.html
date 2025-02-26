@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masjid Sign In</title>
+    <link rel="stylesheet" href="static/main.css">
+</head>
+<body>
+<div id="signinPage" class="signin-container">
+    <img src="images/Logo Mainpp.png" alt="Masjid Logo" class="logo">
+    <h1>Sign In</h1>
+    <form id="signInForm" action="login.php" method="POST">
+        <input type="text" id="username" name="username" placeholder="Enter Username" required>
+       <input type="text" id="password" name="password" placeholder="Enter Password" required>
+        <button type="submit" id="signInButton">Sign In</button>
+    </form>
+    <button id="signUpButton" onclick="redirectToSignup()">Sign Up</button>
+    <div id="errorMessage" class="error-message">Please enter a valid Username.</div>
+</div>
+<script src="static/js/signIn.js"></script>
+</body>
+</html>
