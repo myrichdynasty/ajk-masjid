@@ -55,11 +55,11 @@ foreach ($masjids as $masjid) {
                     <?php if (!empty($masjids)): ?>
                         <?php foreach ($masjids as $masjid): ?>
                             <li onclick="openFormSelection('<?php echo htmlspecialchars($masjid['masjid_name']); ?>')">
-                            <?php echo htmlspecialchars($masjid['masjid_id'] . " - " . $masjid['masjid_name']); ?>
-                        </li>
+                                <?php echo htmlspecialchars($masjid['masjid_id'] . " - " . $masjid['masjid_name']); ?>
+                            </li>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <li>No masjid available</li>
+                        <li>TIADA MASJID TERSEDIA</li>
                     <?php endif; ?>
                 </ul>
             </div>

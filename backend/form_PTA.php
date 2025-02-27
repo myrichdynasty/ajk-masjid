@@ -54,17 +54,33 @@ foreach ($masjids as $masjid) {
         <?php foreach ($daerahMasjids as $daerahName => $masjids): ?>
             <div class="masjid-section">
                 <h2><?php echo htmlspecialchars($daerahName); ?></h2>
-                <ul>
-                    <?php if (!empty($masjids)): ?>
-                        <?php foreach ($masjids as $masjid): ?>
-                            <li onclick="openFormSelection('<?php echo htmlspecialchars($masjid['masjid_name']); ?>')">
-                                <?php echo htmlspecialchars($masjid['masjid_id'] . " - " . $masjid['masjid_name']); ?>
-                            </li>
-                        <?php endforeach; ?>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center">
+                        <thead class="table-primary text-white">
+                    <tr>
+                        <th>NAMA MASJID</th>
+                        <th>TINDAKAN</th>
+                </thead>
+                </tbody>
+                    </tr>
+                    <?php if (empty($masjids)): ?>
+                        <tr><td colspan="7">TIADA DATA DIJUMPAI.</td></tr>
                     <?php else: ?>
-                        <li>TIADA MASJID TERSEDIA</li>
+                        <?php foreach ($masjids as $masjid): ?>
+                            <tr>
+                                <td><?php echo !empty($masjid['masjid_name']) ? htmlspecialchars($masjid['masjid_name']) : '-'; ?></td>
+                                <td>
+                                    <a href="../backend/form1_PTA.php?masjid_id=<?php echo $masjid['masjid_id']; ?>" class="mb-2 ml-2">
+                                        <button type="button" class="btn btn-primary">BORANG PENCALONAN 1</button>
+                                    </a>
+                                    <a href="../backend/form2_PTA - Copy.php?masjid_id=<?php echo $masjid['masjid_id']; ?>" class="mb-2 ml-2">
+                                        <button type="button" class="btn btn-primary">BORANG PENCALONAN 2</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     <?php endif; ?>
-                </ul>
+                </table>
             </div>
         <?php endforeach; ?>
     </div>

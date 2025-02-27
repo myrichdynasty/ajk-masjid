@@ -8,12 +8,6 @@ if (!isset($_SESSION['search_results'])) {
     $_SESSION['search_results'] = [];
 }
 
-/*
-echo "<pre>Debug Search Results:";
-print_r($_SESSION['search_results']);
-echo "</pre>";
-*/
-
 // Retrieve masjid_id from URL
 $masjid_id = isset($_GET['masjid_id']) ? intval($_GET['masjid_id']) : null;
 
@@ -39,9 +33,6 @@ $debug_sql = str_replace(
     ["'$firstDay'", "'$lastDay'", "'$masjid_id'"],
     $sql
 );
-
-// Print Debug Query
-//echo "<pre>Debug SQL Query: " . $debug_sql . "</pre>";
 
 $stmt = $conn->prepare($sql);
 $stmt->execute([
@@ -105,41 +96,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_ic'])) {
 
 // Handle total_vote and role update for individual users
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
-/*
-    echo "<pre>Debug POST Data:\n";
-    print_r($_POST);
-    echo "</pre>";
-*/
-   // exit; // Stop execution to check output
 
-// Extract the first key in the users array (which is the IC number)
-$updateKey = key($_POST['users']); 
+    // Extract the first key in the users array (which is the IC number)
+    $updateKey = key($_POST['users']); 
 
-// Use form_id if it exists, otherwise use IC to prevent errors
-$updateform = $_POST['users'][$updateKey]['form_id'] ?? $updateKey;
+    // Use form_id if it exists, otherwise use IC to prevent errors
+    $updateform = $_POST['users'][$updateKey]['form_id'] ?? $updateKey;
 
 
-//$newVote = intval($_POST['total_vote']);
-$newRole = $_POST['role']; // Get selected role
+    //$newVote = intval($_POST['total_vote']);
+    $newRole = $_POST['role']; // Get selected role
 
-// Debugging
-/*
-echo "<pre>Debug Update Form ID (or IC as fallback): " . $updateform . "</pre>";
-echo "<pre>Debug New Vote Count: " . $newVote . "</pre>";
-echo "<pre>Debug New Role: " . $newRole . "</pre>";
-*/
-
-// Update total_vote and role in the session array
-foreach ($_SESSION['search_results'] as &$user) {
-    if ((isset($user['form_id']) && $user['form_id'] == $updateform) || 
-        (isset($user['ic']) && $user['ic'] == $updateform)) {
-        //$user['total_vote'] = $newVote;
-        $user['role'] = $newRole;
-        break;
+    // Update total_vote and role in the session array
+    foreach ($_SESSION['search_results'] as &$user) {
+        if ((isset($user['form_id']) && $user['form_id'] == $updateform) || 
+            (isset($user['ic']) && $user['ic'] == $updateform)) {
+            //$user['total_vote'] = $newVote;
+            $user['role'] = $newRole;
+            break;
+        }
     }
 }
-}
-
 
 ?>
 
@@ -191,7 +168,7 @@ foreach ($_SESSION['search_results'] as &$user) {
                     $counter = 1; // Initialize counter
                     foreach ($_SESSION['search_results'] as $row): ?>
                         <tr>
-                        <td><?php echo $counter++; ?></td>
+							<td><?php echo $counter++; ?></td>
                             <td><?php echo htmlspecialchars($row['name']); ?></td>
                             <td><?php echo isset($row['form_id']) && !empty($row['form_id']) ? htmlspecialchars($row['form_id']) : 'Not determined yet'; ?></td>
                             <td><?php echo htmlspecialchars($row['ic']); ?></td>
