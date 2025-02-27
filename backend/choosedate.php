@@ -24,73 +24,82 @@ include('connection.php');
         <div class="card form-card mx-auto" style="max-width: 500px;">
             <h2 class="text-center mb-4">CADANGAN TARIKH MESYUARAT</h2>
             <form action="../backend/db_choosedate.php" method="POST">
-                <div class="mb-3">
-                    <label for="date" class="form-label">PILIH TARIKH:</label>
-                    <input type="date" id="date" name="date" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="time" class="form-label">PILIH MASA:</label>
-                    <input type="time" id="time" name="time" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="place" class="form-label">PILIH TEMPAT:</label>
-                    <input type="text" id="place" name="place" class="form-control" required>
-                </div>
-
-                
-                <div id="sections">
-                    <div class="section">
-                    <label for="place" class="form-label">NAMA CADANGAN PENGERUSI MESYUARAT(1):</label>
-                        <fieldset>
-                            <p>
-                                <label for="nama_cadangan1">NAMA PENUH:</label>
-                                <input class="form-control" name="nama_cadangan1" id="nama_cadangan1" value="" type="text" required/>
-                            </p>
-
-                            <p>
-                                <label for="ic_cadangan1">NO KAD PENGENALAN:</label>
-                                <input class="form-control" name="ic_cadangan1" id="ic_cadangan1" value="" type="text" required/>
-                            </p>
-
-                            <p>
-                                <label for="phone_cadangan1">NO TELEFON:</label>
-                                <input class="form-control" name="phone_cadangan1" id="phone_cadangan1" value="" type="text" required/>
-                            </p>
-
-                            <p>
-                                <label for="email_cadangan1">EMAIL:</label>
-                                <input class="form-control" name="email_cadangan1" id="email_cadangan1" value="" type="text" />
-                            </p>
-                        </fieldset>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="date" class="form-label">PILIH TARIKH:</label>
+                            <input type="date" id="date" name="date" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="time" class="form-label">PILIH MASA:</label>
+                            <input type="time" id="time" name="time" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="place" class="form-label">PILIH TEMPAT:</label>
+                            <input type="text" id="place" name="place" class="form-control" required>
+                        </div>
                     </div>
                 </div>
-                <div id="sections">
-                    <div class="section">
-                    <label for="place" class="form-label">NAMA CADANGAN PENGERUSI MESYUARAT(2):</label>
-                        <fieldset>
-                            <p>
-                                <label for="nama_cadangan2">NAMA PENUH:</label>
-                                <input class="form-control" name="nama_cadangan2" id="nama_cadangan2" value="" type="text" required/>
-                            </p>
 
-                            <p>
-                                <label for="ic_cadangan2">NO KAD PENGENALAN:</label>
-                                <input class="form-control" name="ic_cadangan2" id="ic_cadangan2" value="" type="text" required/>
-                            </p>
-
-                            <p>
-                                <label for="phone_cadangan2">NO TELEFON:</label>
-                                <input class="form-control" name="phone_cadangan2" id="phone_cadangan2" value="" type="text" required/>
-                            </p>
-
-                            <p>
-                                <label for="email_cadangan2">EMAIL:</label>
-                                <input class="form-control" name="email_cadangan2" id="email_cadangan2" value="" type="text" />
-                            </p>
-                        </fieldset>
+                <div class="row">
+                    <b><label for="place" class="form-label">NAMA CADANGAN PENGERUSI MESYUARAT(1):</label></b>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="nama_cadangan1">NAMA PENUH:</label>
+                            <input class="form-control" name="nama_cadangan1" id="nama_cadangan1" value="" type="text" required/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="ic_cadangan1">NO KAD PENGENALAN:</label>
+                            <input class="form-control" name="ic_cadangan1" id="ic_cadangan1" value="" type="text" required/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="phone_cadangan1">NO TELEFON:</label>
+                            <input class="form-control" name="phone_cadangan1" id="phone_cadangan1" value="" type="text" required/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="email_cadangan1">EMAIL:</label>
+                            <input class="form-control" name="email_cadangan1" id="email_cadangan1" value="" type="text" />
+                        </div>
                     </div>
                 </div>
-                
+
+                <div class="row">
+                    <b><label for="place" class="form-label">NAMA CADANGAN PENGERUSI MESYUARAT(2):</label></b>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="nama_cadangan2">NAMA PENUH:</label>
+                            <input class="form-control" name="nama_cadangan2" id="nama_cadangan2" value="" type="text" required/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="ic_cadangan2">NO KAD PENGENALAN:</label>
+                            <input class="form-control" name="ic_cadangan2" id="ic_cadangan2" value="" type="text" required/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="phone_cadangan2">NO TELEFON:</label>
+                            <input class="form-control" name="phone_cadangan2" id="phone_cadangan2" value="" type="text" required/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="email_cadangan2">EMAIL:</label>
+                            <input class="form-control" name="email_cadangan2" id="email_cadangan2" value="" type="text" />
+                        </div>
+                    </div>
+                </div>
 
                 <div class="text-center">
                     <button type="submit" name="submit" class="btn btn-primary mt-3">HANTAR</button>
