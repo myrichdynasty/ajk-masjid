@@ -4,7 +4,7 @@ include('connection.php');
 
 $searchIC = '';
 // Initialize session array if not set
-if (!isset($_SESSION['search_results'])) {
+if (isset($_SESSION['search_results'])) {
     $_SESSION['search_results'] = [];
 }
 
@@ -192,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
 
     <td>
         <!-- Ensure role exists, default to "Please select a role" -->
-        <select name="role">
+        <select class="form-control" style="width: 158px;" name="role">
             <option value="" disabled <?php echo (!isset($row['role']) || empty($row['role'])) ? 'selected' : ''; ?>>SILA PILIH JAWATAN</option>
             <option value="PENGERUSI" <?php echo (isset($row['role']) && $row['role'] == 'PENGERUSI') ? 'selected' : ''; ?>>PENGERUSI</option>
             <option value="TIMBALAN PENGERUSI" <?php echo (isset($row['role']) && $row['role'] == 'TIMBALAN PENGERUSI') ? 'selected' : ''; ?>>TIMBALAN PENGERUSI</option>
