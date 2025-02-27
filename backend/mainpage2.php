@@ -71,15 +71,15 @@ try {
             <td>
                 <form action="updatestatus.php" method="POST">
                     <input type="hidden" name="booking_id" value="<?php echo $booking['booking_id']; ?>">
-                    <input type="date" name="date" value="<?php echo htmlspecialchars($booking['date']); ?>">
+                    <input type="date" class="form-control" name="date" value="<?php echo htmlspecialchars($booking['date']); ?>">
             </td>
             <td><?php echo htmlspecialchars(date('H:i', strtotime($booking['time']))); ?></td>
             <td>
-                    <input type="time" name="time" value="<?php echo htmlspecialchars($booking['time']); ?>">
+                    <input type="time" class="form-control" name="time" value="<?php echo htmlspecialchars($booking['time']); ?>">
             </td>
             <td><?php echo htmlspecialchars($booking['place']); ?></td>
             <td>
-                    <select name="status_code">
+                    <select class="form-control" name="status_code" style="width: 158px;">
                         <option value="0" <?php echo ($booking['status_code'] == 0) ? 'selected' : ''; ?>>MENUNGGU KELULUSAN</option>
                         <option value="1" <?php echo ($booking['status_code'] == 1) ? 'selected' : ''; ?>>LULUS</option>
                         <option value="2" <?php echo ($booking['status_code'] == 2) ? 'selected' : ''; ?>>TOLAK</option>
@@ -87,7 +87,7 @@ try {
                     </select>
             </td>
             <td>
-                    <textarea name="comment" rows="2" cols="20"><?php echo htmlspecialchars($booking['comment']); ?></textarea>
+                    <textarea class="form-control" name="comment" rows="2" cols="20"><?php echo htmlspecialchars($booking['comment']); ?></textarea>
             </td>
             <td>
                 1.<?php echo htmlspecialchars($booking['nama_cadangan1']); ?>

@@ -134,13 +134,17 @@ try {
                     <td>
                         <?php
                         if ($booking['status_code'] == 0) {
-                            echo "MENUNGGU KELULUSAN";
+                            // echo "MENUNGGU KELULUSAN";
+                            echo '<span class="badge bg-warning">MENUNGGU KELULUSAN</span>';
                         } elseif ($booking['status_code'] == 1) {
-                            echo "DILULUSKAN";
+                            // echo "DILULUSKAN";
+                            echo '<span class="badge bg-success">DILULUSKAN</span>';
                         } elseif ($booking['status_code'] == 2) {
-                            echo "DITOLAK";
+                            // echo "DITOLAK";
+                            echo '<span class="badge bg-danger">DITOLAK</span>';
                         } else {
-                            echo "DIKEMASKINI";
+                            // echo "DIKEMASKINI";
+                            echo '<span class="badge bg-primary">DIKEMASKINI</span>';
                         }
                         ?>
                     </td>
