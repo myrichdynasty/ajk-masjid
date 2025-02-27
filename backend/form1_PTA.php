@@ -82,7 +82,7 @@ try {
             </tbody>
         </table>
     <?php else: ?>
-        <p>TIADA REKOD DIJUMPAI UNTUK <?php echo htmlspecialchars($masjidName); ?> DALAM BULAN INI.</p>
+        <p class="text-center">TIADA REKOD DIJUMPAI UNTUK <?php echo htmlspecialchars($masjidName); ?> DALAM BULAN INI.</p>
     <?php endif; ?>
 
     <div class="text-center">

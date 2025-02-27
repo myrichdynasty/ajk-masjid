@@ -15,6 +15,7 @@ date_default_timezone_set('Asia/Kuala_Lumpur'); // Set timezone to GMT+8
 // Get the first and last day of the current month
 $firstDay = date('Y-m-01'); // Example: 2024-02-01
 $lastDay = date('Y-m-t');   // Example: 2024-02-29
+$current_date = date('Y-m-d'); // Get current date and time in GMT+8
 
 
 // Query to check if a form in the month
@@ -42,6 +43,29 @@ $stmt->execute([
 ]);
 $forms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Query to check if a booking exists for today
+$sql = "SELECT * FROM booking b 
+JOIN user u ON b.user_id = u.user_id
+JOIN masjid m ON u.masjid_id = m.masjid_id 
+WHERE b.date = :booking_date AND m.masjid_id = :masjid_id AND b.status_code = 1 ";
+
+$stmt = $conn->prepare($sql);
+$stmt->execute([
+    'booking_date' => $current_date,
+    'masjid_id' => $masjid_id
+]);
+$booking = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Fetch bookings for the logged-in user
+try {
+    $stmt = $conn->prepare("SELECT * FROM booking WHERE masjid_id = :masjid_id");
+    $stmt->bindParam(':masjid_id', $_SESSION['masjid_id']);
+    $stmt->execute();
+    $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Error: " . $e->getMessage());
+}
+
 // Append today's forms to search_results, avoiding duplicates
 $existingICs = array_column($_SESSION['search_results'], 'ic');
 
@@ -60,7 +84,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_ic'])) {
 
     if (!empty($searchIC)) {
         try {
-            $stmt = $conn->prepare("SELECT username, pswd, name, masjid_id, ic, phone, address, job FROM user WHERE ic = :ic");
+            $stmt = $conn->prepare("SELECT nama_penuh AS username, 
+                                    nama_penuh AS pswd, nama_penuh AS name, id_masjid AS masjid_id,
+                                    no_ic AS ic, no_hp AS phone, alamat_terkini AS address, pekerjaan AS job 
+                                    FROM sej6x_data_peribadi WHERE no_ic = :ic");
             $stmt->execute(['ic' => $searchIC]);
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
@@ -129,8 +156,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
 </head>
 <body>
 <?php require '../include/header.php'; ?>
-    <div class="container d-flex flex-column align-items-center justify-content-center min-vh-80">
-    <h1 class="text-center mb-4">CARIAN NAMA-NAMA CALON</h1> <!-- Added mb-4 for spacing -->
+<div class="container d-flex flex-column align-items-center justify-content-center min-vh-80">
+    <h1 class="text-center mb-4">MASJID JAMEK AL-HIDAYAH</h1> <!-- Added mb-4 for spacing -->
+    <h1 class="text-center mb-4">MESYUARAT AGUNG PENCALONAN JAWATANKUASA BAGI PENGGAL 2025-2028</h1>
+
+    <div class="table-responsive">
+        <table class="table table-bordered text-center">
+            <thead class="table-primary text-white">
+        <tr>
+            <th>TARIKH</th>
+            <th>MASA</th>
+            <th>TEMPAT</th>
+            <th>NAMA CADANGAN PENGERUSI MESYUARAT</th>
+    </thead>
+    </tbody>
+        </tr>
+        <?php if (empty($bookings)): ?>
+            <tr><td colspan="7">TIADA DATA DIJUMPAI.</td></tr>
+        <?php else: ?>
+            <tr>
+                <td><?php echo htmlspecialchars($booking['date']); ?></td>
+                <td><?php echo date('H:i', strtotime($booking['time'])); ?></td>
+                <td><?php echo htmlspecialchars($booking['place']); ?></td>
+                <td>
+                    1.<?php echo htmlspecialchars($booking['nama_cadangan1']); ?>
+                    <br>
+                    2.<?php echo htmlspecialchars($booking['nama_cadangan2']); ?>
+                </td>
+            </tr>
+        <?php endif; ?>
+    </table>
 
 <!-- Existing search section -->
 <div class="search-section text-center mb-4"> <!-- Added mb-4 for spacing -->
@@ -229,14 +284,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
             <input type="hidden" name="users[<?php echo $key; ?>][role]" value="<?php echo isset($row['role']) ? htmlspecialchars($row['role']) : ''; ?>">
             <input type="hidden" name="users[<?php echo $key; ?>][total_vote]" value="<?php echo isset($row['total_vote']) ? htmlspecialchars($row['total_vote']) : '0'; ?>" required>
         <?php endforeach; ?>
-        <button type="submit" name="update_all" class="btn btn-primary mb-2">SIMPAN DAN HANTAR</button>
+        
+        <div class="export-buttons text-center">
+            <button type="submit" name="update_all" class="btn btn-primary mb-2">SIMPAN DAN HANTAR</button>
+        </div>
         </form>
     <?php else: ?>
         <p>TIADA KEPUTUSAN DIJUMPAI UNTUK TARIKH YANG DIBERIKAN.</p>
     <?php endif; ?>
     <div class="export-buttons text-center">
-    <button onclick="window.location.href = 'form_PTA.php'" class="btn btn-primary mb-2">KEMBALI</button>
-</div>
+        <button onclick="window.location.href = 'form_PTA.php'" class="btn btn-primary mb-2">KEMBALI</button>
+    </div>
     <?php require '../include/footer.php'; ?>
 </body>
 </html>
