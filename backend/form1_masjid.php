@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
             <th>TARIKH</th>
             <th>MASA</th>
             <th>TEMPAT</th>
-            <th>NAMA PENGERUSI</th>
+            <th>NAMA CADANGAN PENGERUSI MESYUARAT</th>
     </thead>
     </tbody>
         </tr>
@@ -157,7 +157,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
                 <td><?php echo htmlspecialchars($booking['date']); ?></td>
                 <td><?php echo date('H:i', strtotime($booking['time'])); ?></td>
                 <td><?php echo htmlspecialchars($booking['place']); ?></td>
-                <td><?php echo htmlspecialchars($booking['nama_pengerusi']); ?></td>
+                <td>
+                    1.<?php echo htmlspecialchars($booking['nama_cadangan1']); ?>
+                    <br>
+                    2.<?php echo htmlspecialchars($booking['nama_cadangan2']); ?>
+                </td>
             </tr>
         <?php endif; ?>
     </table>
@@ -220,7 +224,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
                 <input type="hidden" name="users[<?php echo $row['ic']; ?>][phone]" value="<?php echo $row['phone']; ?>">
                 <input type="hidden" name="users[<?php echo $row['ic']; ?>][address]" value="<?php echo $row['address']; ?>">
                 <input type="hidden" name="users[<?php echo $row['ic']; ?>][job]" value="<?php echo $row['job']; ?>">
+                <input type="hidden" name="users[<?php echo $row['ic']; ?>][booking_id]" value="<?php echo $_GET['booking_id']; ?>">
                 <input type="hidden" name="users[<?php echo $row['ic']; ?>][total_vote]" min="1" value="<?php echo isset($row['total_vote']) ? $row['total_vote'] : '0'; ?>" required>
+                
             <?php endforeach; ?>
             <button type="submit" name="update_all" class="btn btn-primary mt-3">SIMPAN</button>
         </form>

@@ -43,7 +43,9 @@ try {
             <button type="button" class="btn btn-primary mb-2" >SENARAI CALON JAWATANKUASA KARIAH</button>
         </a>
     </div>
+    
     <h2 class="text-center mt-4">SENARAI CADANGAN TARIKH MESYUARAT</h2>
+
     <div class="table-responsive">
     <table class="table table-bordered text-center">
     <thead class="table-primary text-white">
@@ -87,7 +89,10 @@ try {
             <td>
                     <textarea name="comment" rows="2" cols="20"><?php echo htmlspecialchars($booking['comment']); ?></textarea>
             </td>
-            <td><?php echo htmlspecialchars($booking['nama_pengerusi']); ?></td> <!-- Display masjid name -->
+            <td>
+                1.<?php echo htmlspecialchars($booking['nama_cadangan1']); ?>
+                <br>
+                2.<?php echo htmlspecialchars($booking['nama_cadangan2']); ?></td>
             <td>
                     <button type="submit" class="btn btn-primary mb-2">KEMASKINI</button>
                 </form>

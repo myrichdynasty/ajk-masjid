@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                 $phone = $user['phone'];
                 $address = $user['address'];
                 $job = $user['job'];
+                $booking_id = $user['booking_id'];
                 $totalVote = intval($user['total_vote']);
                 $status = 1;
 
@@ -37,19 +38,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     $updatedVote = $totalVote;
                     $stmt = $conn->prepare("
                         UPDATE form 
-                        SET total_vote = :total_vote, status_code = :status_code
+                        SET total_vote = :total_vote, status_code = :status_code, booking_id = :booking_id
                         WHERE ic = :ic AND DATE(date) = :currentDate
                     ");
                     $stmt->bindParam(':total_vote', $updatedVote, PDO::PARAM_INT);
                     $stmt->bindParam(':status_code', $status, PDO::PARAM_INT);
+                    $stmt->bindParam(':booking_id', $booking_id, PDO::PARAM_STR);
                     $stmt->bindParam(':ic', $ic, PDO::PARAM_STR);
                     $stmt->bindParam(':currentDate', $currentDate, PDO::PARAM_STR);
                     $stmt->execute();
                 } else {
                     // If no record exists, insert new entry
                     $stmt = $conn->prepare("
-                        INSERT INTO form (ic, name, date, phone_num, address, job, total_vote, status_code)
-                        VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code)
+                        INSERT INTO form (ic, name, date, phone_num, address, job, total_vote, status_code, booking_id)
+                        VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :booking_id)
                     ");
                     $stmt->bindParam(':ic', $ic, PDO::PARAM_STR);
                     $stmt->bindParam(':name', $name, PDO::PARAM_STR);
@@ -58,11 +60,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     $stmt->bindParam(':job', $job, PDO::PARAM_STR);
                     $stmt->bindParam(':total_vote', $totalVote, PDO::PARAM_INT);
                     $stmt->bindParam(':status_code', $status, PDO::PARAM_INT);
+                    $stmt->bindParam(':booking_id', $booking_id, PDO::PARAM_STR);
                     $stmt->execute();
                 }
             }
 
-            // log_sejarah($id_masjid, "Form 1 telah diisi oleh pengerusi Masjid");
+            // Update booking status to 'tindakan_code' = 2
+            $tindakan_code = 2;
+            $stmt = $conn->prepare("
+                        UPDATE booking 
+                        SET tindakan_code = :tindakan_code
+                        WHERE booking_id = :booking_id
+                    ");
+                    $stmt->bindParam(':booking_id', $booking_id, PDO::PARAM_STR);
+                    $stmt->bindParam(':tindakan_code', $tindakan_code, PDO::PARAM_STR);
+                    $stmt->execute();
 
             $conn->commit(); // Commit transaction
             echo "<pre style='color: green;'>Data successfully processed!</pre>";

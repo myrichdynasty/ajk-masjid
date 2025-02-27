@@ -90,6 +90,33 @@ try {
     }
     ?>
 
+<div class="table-responsive">
+        <table class="table table-bordered text-center">
+            <thead class="table-primary text-white">
+        <tr>
+            <th>TARIKH</th>
+            <th>MASA</th>
+            <th>TEMPAT</th>
+            <th>NAMA CADANGAN PENGERUSI MESYUARAT</th>
+    </thead>
+    </tbody>
+        </tr>
+        <?php if (empty($booking)): ?>
+            <tr><td colspan="7">TIADA DATA DIJUMPAI.</td></tr>
+        <?php else: ?>
+            <tr>
+                <td><?php echo htmlspecialchars($booking['date']); ?></td>
+                <td><?php echo date('H:i', strtotime($booking['time'])); ?></td>
+                <td><?php echo htmlspecialchars($booking['place']); ?></td>
+                <td>
+                    1.<?php echo htmlspecialchars($booking['nama_cadangan1']); ?>
+                    <br>
+                    2.<?php echo htmlspecialchars($booking['nama_cadangan2']); ?>
+                </td>
+            </tr>
+        <?php endif; ?>
+    </table>
+
 <h2 class="text-center">SENARAI CALON-CALON TERPILIH</h2>
     <div class="table-responsive">
         <table class="table table-bordered text-center">
