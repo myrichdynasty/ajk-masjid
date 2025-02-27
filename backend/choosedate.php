@@ -16,6 +16,10 @@ include('connection.php');
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
         }
+        .error {
+            color: #F00;
+            background-color: #FFF;
+        }
     </style>
 </head>
 <body>
@@ -295,7 +299,7 @@ include('connection.php');
     function approvedModal($param) {
             Swal.fire({
             title: 'Teruskan menghantar?',
-            text: "Borang akan dihantar ke PTA untuk pengesahan.",
+            text: "Borang akan dihantar ke Pejabat Agama Daerah untuk pengesahan.",
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#C64EB2',
