@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                 $booking_id = $user['booking_id'];
                 $totalVote = intval($user['total_vote']);
                 $status = 1;
-
+            
                 // Check if an entry with the same IC and date exists
                 $stmt = $conn->prepare("
                     SELECT total_vote FROM form WHERE ic = :ic AND DATE(date) = :currentDate
@@ -32,9 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                 $stmt->bindParam(':currentDate', $currentDate, PDO::PARAM_STR);
                 $stmt->execute();
                 $existingRecord = $stmt->fetch(PDO::FETCH_ASSOC);
-
+            
                 if ($existingRecord) {
-                    // If record exists, update total_vote and status_code
+                    // If record exists, update total_vote and status_code in `form`
                     $updatedVote = $totalVote;
                     $stmt = $conn->prepare("
                         UPDATE form 
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     $stmt->bindParam(':currentDate', $currentDate, PDO::PARAM_STR);
                     $stmt->execute();
                 } else {
-                    // If no record exists, insert new entry
+                    // If no record exists, insert new entry into `form`
                     $stmt = $conn->prepare("
                         INSERT INTO form (ic, name, date, phone_num, address, job, total_vote, status_code, booking_id)
                         VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :booking_id)
@@ -63,6 +63,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     $stmt->bindParam(':booking_id', $booking_id, PDO::PARAM_STR);
                     $stmt->execute();
                 }
+            }
+            
+            // After processing all users, update `form_2` with the top 10 rows from `form`
+            $stmtSelect = $conn->prepare("
+                SELECT ic, name, date, phone_num, address, job, total_vote, status_code, booking_id
+                FROM form
+                WHERE DATE(date) = :currentDate
+                ORDER BY total_vote DESC
+                LIMIT 10
+            ");
+            $stmtSelect->bindParam(':currentDate', $currentDate, PDO::PARAM_STR);
+            $stmtSelect->execute();
+            $top10Rows = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Clear existing rows in `form_2` for the current date
+            $stmtDelete = $conn->prepare("
+                DELETE FROM form_2 WHERE DATE(date) = :currentDate
+            ");
+            $stmtDelete->bindParam(':currentDate', $currentDate, PDO::PARAM_STR);
+            $stmtDelete->execute();
+            
+            // Insert the top 10 rows into `form_2`
+            foreach ($top10Rows as $row) {
+                $stmt2 = $conn->prepare("
+                    INSERT INTO form_2 (ic, name, date, phone_num, address, job, total_vote, status_code, booking_id)
+                    VALUES (:ic, :name, :date, :phone, :address, :job, :total_vote, :status_code, :booking_id)
+                ");
+                $stmt2->bindParam(':ic', $row['ic'], PDO::PARAM_STR);
+                $stmt2->bindParam(':name', $row['name'], PDO::PARAM_STR);
+                $stmt2->bindParam(':date', $row['date'], PDO::PARAM_STR);
+                $stmt2->bindParam(':phone', $row['phone_num'], PDO::PARAM_STR);
+                $stmt2->bindParam(':address', $row['address'], PDO::PARAM_STR);
+                $stmt2->bindParam(':job', $row['job'], PDO::PARAM_STR);
+                $stmt2->bindParam(':total_vote', $row['total_vote'], PDO::PARAM_INT);
+                $stmt2->bindParam(':status_code', $row['status_code'], PDO::PARAM_INT);
+                $stmt2->bindParam(':booking_id', $row['booking_id'], PDO::PARAM_STR);
+                $stmt2->execute();
             }
 
             // Update booking status to 'tindakan_code' = 2
@@ -83,7 +120,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
             $_SESSION['search_results'] = [];
 
             // Redirect to another page after successful insertion
-            header("Location: mainpage.php"); 
+            echo '<script> location.replace("mainpage.php"); </script>';
+            // header("Location: mainpage.php"); 
             exit();
             
         } catch (PDOException $e) {

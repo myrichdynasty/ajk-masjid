@@ -35,11 +35,11 @@ if (!$booking) {
 try {
     // Define the SQL query
     $query = "SELECT f.*, u.*, m.*
-        FROM form f 
+        FROM form_2 f 
         JOIN sej6x_data_peribadi u ON u.no_ic = f.ic
         JOIN masjid m ON u.id_masjid = m.masjid_id
         WHERE DATE(f.date) = :current_date AND m.masjid_id = $masjid_id
-        ORDER BY f.total_vote DESC LIMIT 10";
+        ORDER BY f.total_vote DESC";
 
     $stmt = $conn->prepare($query);
 
@@ -97,7 +97,7 @@ try {
             <th>TARIKH</th>
             <th>MASA</th>
             <th>TEMPAT</th>
-            <th>NAMA CADANGAN PENGERUSI MESYUARAT</th>
+            <th>NAMA PENGERUSI MESYUARAT</th>
     </thead>
     </tbody>
         </tr>
