@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     
                 // Check if an entry with the same IC and date exists
                 $stmt = $conn->prepare("
-                    SELECT form_id, total_vote FROM form 
+                    SELECT form_id, total_vote FROM form_2 
                     WHERE ic = :ic AND DATE(date) = :reg_date
                 ");
                 $stmt->bindParam(':ic', $ic, PDO::PARAM_STR);
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     $updatedVote = $totalVote;
                     if($level_id == 2){
                         $stmt = $conn->prepare("
-                        UPDATE form 
+                        UPDATE form_2 
                         SET total_vote = :total_vote, status_code = :status_code, verify_id_1 = :user_id, role = :role
                         WHERE form_id = :form_id
                     ");
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     }
                     elseif($level_id == 3){
                         $stmt = $conn->prepare("
-                        UPDATE form 
+                        UPDATE form_2 
                         SET total_vote = :total_vote, status_code = :status_code, verify_id_2 = :user_id, role = :role
                         WHERE form_id = :form_id
                     ");
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     }
                     else{
                         $stmt = $conn->prepare("
-                        UPDATE form 
+                        UPDATE form_2 
                         SET total_vote = :total_vote, status_code = :status_code, verify_id_3 = :user_id, role = :role
                         WHERE form_id = :form_id
                     ");
@@ -89,19 +89,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     
                     if ($level_id == 2) {
                         $stmt = $conn->prepare("
-                            INSERT INTO form (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_1)
+                            INSERT INTO form_2 (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_1)
                             VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id)
                         ");
                         $verify_id = $verify1; // Set correct value
                     } elseif ($level_id == 3) {
                         $stmt = $conn->prepare("
-                            INSERT INTO form (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_2)
+                            INSERT INTO form_2 (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_2)
                             VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id)
                         ");
                         $verify_id = $verify2;
                     } else {
                         $stmt = $conn->prepare("
-                            INSERT INTO form (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_3)
+                            INSERT INTO form_2 (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_3)
                             VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id)
                         ");
                         $verify_id = $verify3;
@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
             $_SESSION['search_results'] = [];
 
             // Redirect to meeting_PTA.php after successful insertion
-            header("Location: meeting_PTA.php"); 
+            header("Location: form_PTA.php"); 
             exit();
 
         } catch (PDOException $e) {

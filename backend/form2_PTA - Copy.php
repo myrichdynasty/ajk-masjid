@@ -21,12 +21,12 @@ $current_date = date('Y-m-d'); // Get current date and time in GMT+8
 // Query to check if a form in the month
 $sql = "SELECT f.*, u.nama_penuh AS name, u.no_ic AS ic, u.no_hp AS phone, 
         u.alamat_terkini AS address, u.pekerjaan AS job, u.id_masjid AS masjid_id, m.masjid_name
-        FROM form f 
+        FROM form_2 f 
         JOIN sej6x_data_peribadi u ON f.ic = u.no_ic
         JOIN masjid m ON u.id_masjid = m.masjid_id 
         WHERE DATE(f.reg_date) BETWEEN :firstdate AND :lastdate
         AND m.masjid_id = :masjid_id 
-        ORDER BY f.total_vote DESC LIMIT 10";
+        ORDER BY f.total_vote DESC";
 
 // Generate debug query by replacing placeholders with actual values
 $debug_sql = str_replace(
@@ -47,11 +47,10 @@ $forms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $sql = "SELECT * FROM booking b 
 JOIN user u ON b.user_id = u.user_id
 JOIN masjid m ON u.masjid_id = m.masjid_id 
-WHERE b.date = :booking_date AND m.masjid_id = :masjid_id AND b.status_code = 1 ";
+WHERE m.masjid_id = :masjid_id AND b.status_code = 1 ";
 
 $stmt = $conn->prepare($sql);
 $stmt->execute([
-    'booking_date' => $current_date,
     'masjid_id' => $masjid_id
 ]);
 $booking = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -171,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
     </thead>
     </tbody>
         </tr>
-        <?php if (empty($bookings)): ?>
+        <?php if (empty($booking)): ?>
             <tr><td colspan="7">TIADA DATA DIJUMPAI.</td></tr>
         <?php else: ?>
             <tr>
@@ -207,7 +206,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
                     <tr>
                         <th>NO</th>
                         <th>NAMA</th>
-                        <th>ID BORANG</th>
                         <th>NO KAD PENGENALAN</th>
                         <th>NO TELEFON</th>
                         <th>ALAMAT</th>
@@ -225,7 +223,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
                         <tr>
 							<td><?php echo $counter++; ?></td>
                             <td><?php echo htmlspecialchars($row['name']); ?></td>
-                            <td><?php echo isset($row['form_id']) && !empty($row['form_id']) ? htmlspecialchars($row['form_id']) : 'Not determined yet'; ?></td>
                             <td><?php echo htmlspecialchars($row['ic']); ?></td>
                             <td><?php echo htmlspecialchars($row['phone']); ?></td>
                             <td><?php echo htmlspecialchars($row['address']); ?></td>
@@ -284,6 +281,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
             <input type="hidden" name="users[<?php echo $key; ?>][role]" value="<?php echo isset($row['role']) ? htmlspecialchars($row['role']) : ''; ?>">
             <input type="hidden" name="users[<?php echo $key; ?>][total_vote]" value="<?php echo isset($row['total_vote']) ? htmlspecialchars($row['total_vote']) : '0'; ?>" required>
         <?php endforeach; ?>
+
+        <div class="container">
+            <h2>MAKLUMAT MESYAURAT - PTA</h2>
+            <form method="POST" action="meeting_PTA.php">
+                <div class="mb-3">
+                    <label for="meeting_date" class="form-label">TARIKH MESYUARAT:</label>
+                    <input type="date" class="form-control" id="meeting_date" name="meeting_date" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="meeting_time" class="form-label">MASA MESYUARAT:</label>
+                    <input type="time" class="form-control" id="meeting_time" name="meeting_time" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="meeting_place" class="form-label">TEMPAT MESYUARAT:</label>
+                    <input type="text" class="form-control" id="meeting_place" name="meeting_place" placeholder="Enter location" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="meeting_part" class="form-label">AHLI MESYUARAT (comma-separated):</label>
+                    <textarea class="form-control" id="meeting_part" name="meeting_part" rows="3" placeholder="Enter participant names separated by commas" required></textarea>
+                </div>
+                
+            </form>
+        </div>
         
         <div class="export-buttons text-center">
             <button type="submit" name="update_all" class="btn btn-primary mb-2">SIMPAN DAN HANTAR</button>
