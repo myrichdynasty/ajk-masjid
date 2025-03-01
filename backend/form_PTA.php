@@ -5,6 +5,12 @@ include('../backend/connection.php'); // Include database connection
 $daerah_id = $_SESSION['daerah_id'];
 
 try {
+    date_default_timezone_set('Asia/Kuala_Lumpur'); // Set timezone to GMT+8
+    // Get the first and last day of the current month
+    $firstDay = date('Y-m-01'); // Example: 2024-02-01
+    $lastDay = date('Y-m-t');   // Example: 2024-02-29
+    $current_date = date('Y-m-d'); // Get current date and time in GMT+8
+
     // Fetch the specific daerah name of the logged-in user
     $stmt = $conn->prepare("SELECT daerah_name FROM daerah WHERE daerah_id = :daerah_id");
     $stmt->bindParam(':daerah_id', $daerah_id, PDO::PARAM_INT);
@@ -12,11 +18,24 @@ try {
     $daerah = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Fetch all masjids only for the logged-in user's daerah
-    $stmt = $conn->prepare("SELECT m.*, d.daerah_name FROM masjid m
+    $stmt = $conn->prepare("SELECT m.*, d.daerah_name,
+        (SELECT COUNT(*) 
+        FROM form f 
+        JOIN booking b ON f.booking_id = b.booking_id 
+        WHERE DATE(b.reg_date) BETWEEN '".$firstDay."' AND '".$lastDay."' AND b.masjid_id = m.masjid_id) AS form_1,
+        (SELECT COUNT(*) 
+        FROM form_2 ff 
+        JOIN booking bb ON ff.booking_id = bb.booking_id 
+        WHERE DATE(bb.reg_date) BETWEEN '".$firstDay."' AND '".$lastDay."' AND bb.masjid_id = m.masjid_id) AS form_2
+        FROM masjid m
         JOIN daerah d ON m.daerah_id = d.daerah_id
-        WHERE m.daerah_id = :daerah_id
+        WHERE m.daerah_id = ".$daerah_id."
         ORDER BY m.masjid_id");
-    $stmt->bindParam(':daerah_id', $daerah_id, PDO::PARAM_INT);
+    // $stmt->bindParam(':daerah_id', $daerah_id, PDO::PARAM_INT);
+    // $stmt->bindParam(':firstdate', $firstDay, PDO::PARAM_INT);
+    // $stmt->bindParam(':lastdate', $lastDay, PDO::PARAM_INT);
+    // print_r($stmt);
+    // exit;
     $stmt->execute();
     $masjids = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -71,10 +90,10 @@ foreach ($masjids as $masjid) {
                                 <td><?php echo !empty($masjid['masjid_name']) ? htmlspecialchars($masjid['masjid_name']) : '-'; ?></td>
                                 <td>
                                     <a href="../backend/form1_PTA.php?masjid_id=<?php echo $masjid['masjid_id']; ?>" class="mb-2 ml-2">
-                                        <button type="button" class="btn btn-primary">BORANG PENCALONAN 1</button>
+                                        <button type="button" class="btn btn-primary">BORANG PENCALONAN 1 <?php if($masjid['form_1'] > 0){ ?><span class="badge bg-danger"><?php echo "Baru"; ?></span><?php } ?></button>
                                     </a>
                                     <a href="../backend/form2_PTA - Copy.php?masjid_id=<?php echo $masjid['masjid_id']; ?>" class="mb-2 ml-2">
-                                        <button type="button" class="btn btn-primary">BORANG PENCALONAN 2</button>
+                                        <button type="button" class="btn btn-primary">BORANG PENCALONAN 2 <?php if($masjid['form_2'] > 0){ ?><span class="badge bg-danger"><?php echo "Baru"; ?></span><?php } ?></button>
                                     </a>
                                 </td>
                             </tr>
