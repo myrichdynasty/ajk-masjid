@@ -11,11 +11,10 @@ $masjid_id = $_SESSION['masjid_id'];
 $sql = "SELECT * FROM booking b 
 JOIN user u ON b.user_id = u.user_id
 JOIN masjid m ON u.masjid_id = m.masjid_id 
-WHERE b.date = :booking_date AND m.masjid_id = :masjid_id AND b.status_code = 1 ";
+WHERE m.masjid_id = :masjid_id AND b.status_code = 1 ";
 
 $stmt = $conn->prepare($sql);
 $stmt->execute([
-    'booking_date' => $current_date,
     'masjid_id' => $masjid_id
 ]);
 
@@ -38,13 +37,13 @@ try {
         FROM form_2 f 
         JOIN sej6x_data_peribadi u ON u.no_ic = f.ic
         JOIN masjid m ON u.id_masjid = m.masjid_id
-        WHERE DATE(f.date) = :current_date AND m.masjid_id = $masjid_id
+        WHERE m.masjid_id = $masjid_id
         ORDER BY f.total_vote DESC";
 
     $stmt = $conn->prepare($query);
 
     // Bind the parameter
-    $stmt->bindParam(':current_date', $current_date, PDO::PARAM_STR);
+    // $stmt->bindParam(':current_date', $current_date, PDO::PARAM_STR);
 
  /*   // Debugging: Display the SQL query with actual values
     $debug_query = str_replace(":current_date", "'$current_date'", $query);
