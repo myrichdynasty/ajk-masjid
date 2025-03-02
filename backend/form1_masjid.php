@@ -42,13 +42,10 @@ try {
 }
 
 // Query to check if a form exists for today
-$sql = "SELECT f.*, u.name, u.ic, u.phone, u.address, u.job, u.masjid_id
-        FROM form f 
+$sql = "SELECT f.*, u.name, u.ic, u.phone, u.address, u.job, u.masjid_id FROM form f 
         JOIN user u ON f.ic = u.ic
         JOIN masjid m ON u.masjid_id = m.masjid_id 
-        WHERE DATE(f.reg_date) = :booking_date 
-        AND m.masjid_id = :masjid_id 
-        AND f.status_code = 1";
+        WHERE DATE(f.reg_date) = :booking_date AND m.masjid_id = :masjid_id AND f.status_code = 1";
 
 $stmt = $conn->prepare($sql);
 $stmt->execute([
@@ -76,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_ic'])) {
     if (!empty($searchIC)) {
         try {
             $stmt = $conn->prepare("SELECT nama_penuh AS username, 
-                                    nama_penuh AS pswd, nama_penuh AS name, id_masjid AS masjid_id,
+                                    nama_penuh AS pswd, nama_penuh AS name, id_masjid AS masjid_id, jantina AS gender,
                                     no_ic AS ic, no_hp AS phone, alamat_terkini AS address, pekerjaan AS job 
                                     FROM sej6x_data_peribadi WHERE no_ic = :ic");
             $stmt->execute(['ic' => $searchIC]);
@@ -136,8 +133,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
 <body>
     <?php require '../include/header.php'; ?>
     <div class="container d-flex flex-column align-items-center justify-content-center min-vh-80">
-    <h1 class="text-center mb-4">NAMA MASJID</h1> <!-- Added mb-4 for spacing -->
-    <h1 class="text-center mb-4">MESYUARAT AGUNG PENCALONAN JAWATANKUASA</h1>
+    <h1 class="text-center mb-4">MASJID JAMEK AL-HIDAYAH</h1> <!-- Added mb-4 for spacing -->
+    <h1 class="text-center mb-4">MESYUARAT AGUNG PENCALONAN JAWATANKUASA BAGI PENGGAL 2025-2028</h1>
 
     <div class="table-responsive">
         <table class="table table-bordered text-center">
@@ -186,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
     <thead class="table-primary text-white">
         <tr>
             <th>NAMA</th>
-            <th>NAMA MASJID</th>
+            <th>JANTINA</th>
             <th>NO KAD PENGENALAN</th>
             <th>NO TELEFON</th>
             <th>ALAMAT</th>
@@ -198,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
         <?php foreach ($_SESSION['search_results'] as $row): ?>
             <tr>
                 <td><?php echo htmlspecialchars($row['name']); ?></td>
-                <td><?php echo htmlspecialchars($row['masjid_id']); ?></td>
+                <td><?php echo htmlspecialchars($row['gender']); ?></td>
                 <td><?php echo htmlspecialchars($row['ic']); ?></td>
                 <td><?php echo htmlspecialchars($row['phone']); ?></td>
                 <td><?php echo htmlspecialchars($row['address']); ?></td>
@@ -221,6 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
                 <input type="hidden" name="users[<?php echo $row['ic']; ?>][ic]" value="<?php echo $row['ic']; ?>">
                 <input type="hidden" name="users[<?php echo $row['ic']; ?>][name]" value="<?php echo $row['name']; ?>">
                 <input type="hidden" name="users[<?php echo $row['ic']; ?>][masjid_id]" value="<?php echo $row['masjid_id']; ?>">
+                <input type="hidden" name="users[<?php echo $row['ic']; ?>][gender]" value="<?php echo $row['gender']; ?>">
                 <input type="hidden" name="users[<?php echo $row['ic']; ?>][phone]" value="<?php echo $row['phone']; ?>">
                 <input type="hidden" name="users[<?php echo $row['ic']; ?>][address]" value="<?php echo $row['address']; ?>">
                 <input type="hidden" name="users[<?php echo $row['ic']; ?>][job]" value="<?php echo $row['job']; ?>">
@@ -231,7 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
             <button type="submit" name="update_all" class="btn btn-primary mt-3">SIMPAN</button>
         </form>
     <?php else: ?>
-        <p class="text-center text-muted mt-4">TIADA DATA DIJUMPAI BAGI NO KAD PENGENALAN YANG DICARI.</p>
+        <p class="text-center text-muted mt-4">MAKLUMAT CALON AKAN DIPAPARKAN DISINI.</p>
     <?php endif; ?>
 
     <?php require '../include/footer.php'; ?>
