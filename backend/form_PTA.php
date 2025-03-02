@@ -95,6 +95,9 @@ foreach ($masjids as $masjid) {
                                     <a href="../backend/form2_PTA - Copy.php?masjid_id=<?php echo $masjid['masjid_id']; ?>" class="mb-2 ml-2">
                                         <button type="button" class="btn btn-primary">BORANG PENCALONAN 2 <?php if($masjid['form_2'] > 0){ ?><span class="badge bg-danger"><?php echo "Baru"; ?></span><?php } ?></button>
                                     </a>
+                                    <a href="../backend/form2_PTA.php?masjid_id=<?php echo $masjid['masjid_id']; ?>" class="mb-2 ml-2">
+                                        <button type="button" class="btn btn-primary">VIEW<?php if($masjid['form_2'] > 0){ ?><span class="badge bg-danger"><?php echo "Baru"; ?></span><?php } ?></button>
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

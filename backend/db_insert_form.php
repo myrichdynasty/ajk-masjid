@@ -8,28 +8,29 @@ $currentDate = date('Y-m-d'); // Store only the date (YYYY-MM-DD)
 require '../include/function.php';
 
 // Function to fetch and insert top rows into form_2
-function fetchAndInsertTopRows($conn, $currentDate, $gender, $limit) {
+function fetchAndInsertTopRows($conn, $currentDate, $gender, $limit, $booking_id) {
     // Fetch top rows based on gender and limit
     $stmtSelect = $conn->prepare("
         SELECT ic, name, gender, date, phone_num, address, job, total_vote, status_code, booking_id
         FROM form
-        WHERE DATE(date) = :currentDate AND gender = :gender
+        WHERE DATE(date) = :currentDate AND gender = :gender AND booking_id = :booking_id
         ORDER BY total_vote DESC
         LIMIT :limit
     ");
     $stmtSelect->bindParam(':currentDate', $currentDate, PDO::PARAM_STR);
     $stmtSelect->bindParam(':gender', $gender, PDO::PARAM_INT);
     $stmtSelect->bindParam(':limit', $limit, PDO::PARAM_INT);
+    $stmtSelect->bindParam(':booking_id', $booking_id, PDO::PARAM_INT);
     $stmtSelect->execute();
     $topRows = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
 
     // Clear existing rows in `form_2` for the current date and gender
-    $stmtDelete = $conn->prepare("
-        DELETE FROM form_2 WHERE DATE(date) = :currentDate AND gender = :gender
-    ");
-    $stmtDelete->bindParam(':currentDate', $currentDate, PDO::PARAM_STR);
-    $stmtDelete->bindParam(':gender', $gender, PDO::PARAM_INT);
-    $stmtDelete->execute();
+    // $stmtDelete = $conn->prepare("
+    //     DELETE FROM form_2 WHERE DATE(date) = :currentDate AND gender = :gender
+    // ");
+    // $stmtDelete->bindParam(':currentDate', $currentDate, PDO::PARAM_STR);
+    // $stmtDelete->bindParam(':gender', $gender, PDO::PARAM_INT);
+    // $stmtDelete->execute();
 
     // Insert the top rows into `form_2`
     foreach ($topRows as $row) {
@@ -131,8 +132,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
             }
 
             // After processing all users, update `form_2` with the top 7 (Man) and top 2 (Woman) rows from `form`
-            fetchAndInsertTopRows($conn, $currentDate, 1, 8); // For men (gender = 1)
-            fetchAndInsertTopRows($conn, $currentDate, 2, 2); // For women (gender = 2)
+            fetchAndInsertTopRows($conn, $currentDate, 1, 8, $booking_id); // For men (gender = 1)
+            fetchAndInsertTopRows($conn, $currentDate, 2, 2, $booking_id); // For women (gender = 2)
 
             // Update booking status to 'tindakan_code' = 2
             $tindakan_code = 2;
