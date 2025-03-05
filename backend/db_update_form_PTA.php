@@ -1,6 +1,8 @@
 <?php
 session_start();
 include('connection.php');
+require '../include/function.php';
+
 date_default_timezone_set('Asia/Kuala_Lumpur'); // Set timezone to GMT+8
 $currentDate = date('Y-m-d'); // Store only the date (YYYY-MM-DD)
 
@@ -32,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     $phone = $user['phone'];
                     $address = $user['address'];
                     $job = $user['job'];
+                    $booking_id = $user['booking_id'];
                     $totalVote = intval($user['total_vote']);
                     $role = $user['role'];
                     $status = $level_id;
@@ -56,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     if($level_id == 2){
                         $stmt = $conn->prepare("
                         UPDATE form_2 
-                        SET total_vote = :total_vote, status_code = :status_code, verify_id_1 = :user_id, role = :role
+                        SET total_vote = :total_vote, booking_id = :booking_id, status_code = :status_code, verify_id_1 = :user_id, role = :role
                         WHERE form_id = :form_id
                     ");
                     $stmt->bindParam(':user_id', $verify1, PDO::PARAM_INT);
@@ -64,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     elseif($level_id == 3){
                         $stmt = $conn->prepare("
                         UPDATE form_2 
-                        SET total_vote = :total_vote, status_code = :status_code, verify_id_2 = :user_id, role = :role
+                        SET total_vote = :total_vote, booking_id = :booking_id, status_code = :status_code, verify_id_2 = :user_id, role = :role
                         WHERE form_id = :form_id
                     ");
                     $stmt->bindParam(':user_id', $verify1, PDO::PARAM_INT);
@@ -72,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     else{
                         $stmt = $conn->prepare("
                         UPDATE form_2 
-                        SET total_vote = :total_vote, status_code = :status_code, verify_id_3 = :user_id, role = :role
+                        SET total_vote = :total_vote, booking_id = :booking_id, status_code = :status_code, verify_id_3 = :user_id, role = :role
                         WHERE form_id = :form_id
                     ");
                     $stmt->bindParam(':user_id', $verify1, PDO::PARAM_INT);
@@ -80,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                   
 
                     $stmt->bindParam(':total_vote', $updatedVote, PDO::PARAM_INT);
+                    $stmt->bindParam(':booking_id', $booking_id, PDO::PARAM_STR);
                     $stmt->bindParam(':status_code', $status, PDO::PARAM_INT);
                     $stmt->bindParam(':form_id', $form_id, PDO::PARAM_INT);
                     $stmt->bindParam(':role', $role, PDO::PARAM_STR);
@@ -89,20 +93,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     
                     if ($level_id == 2) {
                         $stmt = $conn->prepare("
-                            INSERT INTO form_2 (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_1)
-                            VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id)
+                            INSERT INTO form_2 (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_1, booking_id)
+                            VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id, :booking_id)
                         ");
                         $verify_id = $verify1; // Set correct value
                     } elseif ($level_id == 3) {
                         $stmt = $conn->prepare("
-                            INSERT INTO form_2 (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_2)
-                            VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id)
+                            INSERT INTO form_2 (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_2, booking_id)
+                            VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id, :booking_id)
                         ");
                         $verify_id = $verify2;
                     } else {
                         $stmt = $conn->prepare("
-                            INSERT INTO form_2 (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_3)
-                            VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id)
+                            INSERT INTO form_2 (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_3, booking_id)
+                            VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id, :booking_id)
                         ");
                         $verify_id = $verify3;
                     }
@@ -116,6 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     $stmt->bindParam(':status_code', $status, PDO::PARAM_INT);
                     $stmt->bindParam(':role', $role, PDO::PARAM_STR);
                     $stmt->bindParam(':verify_id', $verify_id, PDO::PARAM_INT);
+                    $stmt->bindParam(':booking_id', $booking_id, PDO::PARAM_STR);
                 
                     // Execute the statement
                     $stmt->execute();

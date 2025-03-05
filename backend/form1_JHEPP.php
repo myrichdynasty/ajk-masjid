@@ -47,14 +47,14 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Data for <?php echo htmlspecialchars($masjidName); ?></title>
+    <title>DATA BORANG PENCALONAN 1 BAGI <?php echo htmlspecialchars($masjidName); ?></title>
 </head>
 <body>
 <?php require '../include/header.php'; ?>
 
 <div class="text-center mt-3">
-    <h2>Form Data for <?php echo htmlspecialchars($masjidName); ?></h2>
-    <p>Showing records from <strong><?php echo $firstDay; ?></strong> to <strong><?php echo $lastDay; ?></strong></p>
+    <h2>DATA BORANG PENCALONAN 1 BAGI <?php echo htmlspecialchars($masjidName); ?></h2>
+    <p>REKOD DARI <strong><?php echo $firstDay; ?></strong> HINGGA <strong><?php echo $lastDay; ?></strong></p>
 </div>
 
 
@@ -65,20 +65,24 @@ try {
         <table class="table table-bordered text-center">
             <thead class="table-primary text-white">
                 <tr>
-                    <th>Name</th>
-                    <th>IC</th>
-                    <th>Phone Number</th>
-                    <th>Address</th>
-                    <th>Job</th>
-                    <th>Total Vote</th>
-                    <th>Date</th>
+                    <th>NO.</th>
+                    <th>NAMA</th>
+                    <th>NO KAD PENGENALAN</th>
+                    <th>NO TELEFON</th>
+                    <th>ALAMAT</th>
+                    <th>PEKERJAAN</th>
+                    <th>JUMLAH UNDI</th>
+                    <th>TARIKH</th>
                 </thead>
                 <tbody>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($searchResults as $row): ?>
+                <?php 
+                    $counter = 1;
+                    foreach ($searchResults as $row): ?>
                     <tr>
+                        <td><?php echo $counter++; ?></td>
                         <td><?php echo htmlspecialchars($row['name']); ?></td>
                         <td><?php echo htmlspecialchars($row['ic']); ?></td>
                         <td><?php echo htmlspecialchars($row['phone']); ?></td>
@@ -91,10 +95,10 @@ try {
             </tbody>
         </table>
     <?php else: ?>
-        <p>No records found for <?php echo htmlspecialchars($masjidName); ?> within this month.</p>
+        <p class="text-center mt-3">TIADA DATA CALON BAGI <?php echo htmlspecialchars($masjidName); ?> BAGI BULAN INI.</p>
     <?php endif; ?>
     <div class="text-center mt-3">
-    <button onclick="window.location.href = 'form_JHEPP.php'" class="btn btn-primary">Back</button>
+    <button onclick="window.location.href = 'mainpage3.php'" class="btn btn-primary">KEMBALI</button>
 </div>
 
     <?php require '../include/footer.php'; ?>

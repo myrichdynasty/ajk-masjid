@@ -61,9 +61,11 @@ try {
         <th>TINDAKAN</th>
     </thead>
     </tr>
-    <?php foreach ($bookings as $booking): ?>
+    <?php 
+        $counter = 1;
+        foreach ($bookings as $booking): ?>
         <tr>
-            <td><?php echo htmlspecialchars($booking['booking_id']); ?></td>
+            <td><?php echo $counter++; ?></td>
             <td><?php echo htmlspecialchars($booking['masjid_name']); ?></td>
             <td><?php echo htmlspecialchars($booking['date']); ?></td>
             <td>

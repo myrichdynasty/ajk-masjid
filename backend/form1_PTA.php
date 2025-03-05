@@ -58,6 +58,7 @@ try {
         <table class="table table-bordered text-center">
             <thead class="table-primary text-white">
                 <tr>
+                    <th>NO.</th>
                     <th>NAMA</th>
                     <th>NO KAD PENGENALAN</th>
                     <th>NO TELEFON</th>
@@ -68,8 +69,11 @@ try {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($searchResults as $row): ?>
+                <?php 
+                    $counter = 1;
+                    foreach ($searchResults as $row): ?>
                     <tr>
+                        <td><?php echo $counter++; ?></td>
                         <td><?php echo htmlspecialchars($row['name']); ?></td>
                         <td><?php echo htmlspecialchars($row['ic']); ?></td>
                         <td><?php echo htmlspecialchars($row['phone']); ?></td>
