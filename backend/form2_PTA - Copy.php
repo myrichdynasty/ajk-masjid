@@ -272,38 +272,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
                 <input type="hidden" name="users[<?php echo $key; ?>][total_vote]" value="<?php echo isset($row['total_vote']) ? htmlspecialchars($row['total_vote']) : '0'; ?>" required>
             <?php endforeach; ?>
 
-            <div class="container">
-                <h2>MAKLUMAT MESYAURAT - PTA</h2>
-                <form method="POST" action="meeting_PTA.php">
-                    <div class="mb-3">
-                        <label for="meeting_date" class="form-label">TARIKH MESYUARAT:</label>
-                        <input type="date" class="form-control" id="meeting_date" name="meeting_date" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="meeting_time" class="form-label">MASA MESYUARAT:</label>
-                        <input type="time" class="form-control" id="meeting_time" name="meeting_time" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="meeting_place" class="form-label">TEMPAT MESYUARAT:</label>
-                        <input type="text" class="form-control" id="meeting_place" name="meeting_place" placeholder="Enter location" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="meeting_part" class="form-label">AHLI MESYUARAT (comma-separated):</label>
-                        <textarea class="form-control" id="meeting_part" name="meeting_part" rows="3" placeholder="Enter participant names separated by commas" required></textarea>
-                    </div>
-                </form>
-            </div>
-
             <div class="export-buttons text-center">
-                <button type="submit" name="update_all" class="btn btn-primary mb-2">SIMPAN DAN HANTAR</button>
+                <button type="submit" name="update_all" class="btn btn-primary mb-2">SIMPAN</button>
             </div>
         </form>
     <?php else: ?>
         <p>TIADA KEPUTUSAN DIJUMPAI UNTUK TARIKH YANG DIBERIKAN.</p>
     <?php endif; ?>
+
+    <div class="container">
+        <h2>MAKLUMAT MESYAURAT - PTA</h2>
+        <form method="POST" action="meeting_PTA.php">
+            <div class="mb-3">
+                <label for="meeting_date" class="form-label">TARIKH MESYUARAT:</label>
+                <input type="date" class="form-control" id="meeting_date" name="meeting_date" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="meeting_time" class="form-label">MASA MESYUARAT:</label>
+                <input type="time" class="form-control" id="meeting_time" name="meeting_time" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="meeting_place" class="form-label">TEMPAT MESYUARAT:</label>
+                <input type="text" class="form-control" id="meeting_place" name="meeting_place" placeholder="Enter location" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="meeting_part" class="form-label">AHLI MESYUARAT (comma-separated):</label>
+                <textarea class="form-control" id="meeting_part" name="meeting_part" rows="3" placeholder="Enter participant names separated by commas" required></textarea>
+            </div>
+
+            <div class="export-buttons text-center">
+                <button type="submit" name="update_all" class="btn btn-primary mb-2">HANTAR</button>
+            </div>
+        </form>
+    </div>
 
     <div class="export-buttons text-center">
         <button onclick="window.location.href = 'form_PTA.php'" class="btn btn-primary mb-2">KEMBALI</button>

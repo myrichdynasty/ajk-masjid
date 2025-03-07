@@ -10,7 +10,7 @@ foreach ($users as $form_id => $user) {
         // If so, retrieve the actual form_id from the database
         $stmt = $conn->prepare("
             SELECT form_id 
-            FROM form 
+            FROM form_2
             WHERE ic = :ic And reg_date = :date
             LIMIT 1
         ");
