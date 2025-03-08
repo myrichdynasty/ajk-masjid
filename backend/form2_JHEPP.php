@@ -179,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form 2 JHEPP / MIPP</title>
+    <title>BORANG PENCALONAN 2 JHEPP / MIPP</title>
     <script src="../Script/reject.js"></script>
 
 </head>
@@ -187,36 +187,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
 <?php require '../include/header.php'; 
 ?>
 <div class="container d-flex flex-column align-items-center justify-content-center min-vh-80">
-    <h1 class="text-center mb-4">Search User Data by IC</h1> <!-- Added mb-4 for spacing -->
+    <h1 class="text-center mb-4">CARIAN DATA CALON DENGAN NO KAD PENGENALAN</h1> <!-- Added mb-4 for spacing -->
 
 <!-- Existing search section -->
 <div class="search-section text-center mb-4"> <!-- Added mb-4 for spacing -->
     <form method="POST" action="" class="d-flex justify-content-center align-items-center gap-2 w-100 mx-auto">
         <div class="d-flex align-items-center">
-            <label for="search_ic" class="me-2 mb-0">Enter IC:</label>
+            <label for="search_ic" class="me-2 mb-0">MASUKKAN NO KAD PENGENALAN:</label>
             <input type="text" id="search_ic" name="search_ic" pattern="\d{12,}" maxlength="12" required class="form-control text-center w-75">
         </div>
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="submit" class="btn btn-primary">CARI</button>
     </form>
 </div>
     <?php 
     if (!empty($_SESSION['search_results'])): ?>
-        <h2>Search Results:</h2>
+        <h2>HASIL CARIAN:</h2>
         <table class="table table-bordered text-center">
         <thead class="table-primary text-white">
                     <tr>
-                        <th>No</th>
-                        <th>Name</th>
-                        <th>Form No</th>
-                        <th>IC</th>
-                        <th>Phone Number</th>
-                        <th>Address</th>
-                        <th>Job</th>
-                        <th>Total Vote</th>
-                        <th>Role</th>
-                        <th>Action</th>
+                        <th>NO</th>
+                        <th>NAMA</th>
+                        <!-- <th>Form No</th> -->
+                        <th>NO KAD PENGENALAN</th>
+                        <th>NO TELEFON</th>
+                        <th>ALAMAT</th>
+                        <th>PEKERJAAN</th>
+                        <th>JUMLAH UNDI</th>
+                        <th>JAWATAN</th>
+                        <th>TINDAKAN</th>
                         <?php if ($level_id == 4) { ?> 
-                        <th>Approval</th>
+                        <th>KELULUSAN</th>
                         <?php } ?>
                         </thead>
                         <tbody>
@@ -228,7 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
                         <tr>
                         <td><?php echo $counter++; ?></td>
                             <td><?php echo htmlspecialchars($row['name']); ?></td>
-                            <td><?php echo htmlspecialchars($row['form_id']); ?></td>
+                            <!-- <td><?php echo htmlspecialchars($row['form_id']); ?></td> -->
                             <td><?php echo htmlspecialchars($row['ic']); ?></td>
                             <td><?php echo htmlspecialchars($row['phone']); ?></td>
                             <td><?php echo htmlspecialchars($row['address']); ?></td>
@@ -251,18 +251,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
     <td>
         <!-- Ensure role exists, default to "Please select a role" -->
         <select name="role">
-        <option value="" disabled <?php echo (!isset($row['role']) || empty($row['role'])) ? 'selected' : ''; ?>>Please select a role</option>
-            <option value="Pengerusi" <?php echo (isset($row['role']) && $row['role'] == 'Pengerusi') ? 'selected' : ''; ?>>Pengerusi</option>
-            <option value="Timbalan Pengerusi" <?php echo (isset($row['role']) && $row['role'] == 'Timbalan Pengerusi') ? 'selected' : ''; ?>>Timbalan Pengerusi</option>
-            <option value="Setiausaha" <?php echo (isset($row['role']) && $row['role'] == 'Setiausaha') ? 'selected' : ''; ?>>Setiausaha</option>
+        <option value="" disabled <?php echo (!isset($row['role']) || empty($row['role'])) ? 'selected' : ''; ?>>SILA PILIH JAWATAN:</option>
+            <option value="Pengerusi" <?php echo (isset($row['role']) && $row['role'] == 'Pengerusi') ? 'selected' : ''; ?>>PENGERUSI</option>
+            <option value="Timbalan Pengerusi" <?php echo (isset($row['role']) && $row['role'] == 'Timbalan Pengerusi') ? 'selected' : ''; ?>>TIMBALAN PENGERUSI</option>
+            <option value="Bendahari" <?php echo (isset($row['role']) && $row['role'] == 'Bendahari') ? 'selected' : ''; ?>>BENDAHARI</option>
+            <option value="Setiausaha" <?php echo (isset($row['role']) && $row['role'] == 'Setiausaha') ? 'selected' : ''; ?>>SETIAUSHA</option>
             <option value="AJK" <?php echo (isset($row['role']) && $row['role'] == 'AJK') ? 'selected' : ''; ?>>AJK</option>
-            <option value="AJK Wanita" <?php echo (isset($row['role']) && $row['role'] == 'AJK Wanita') ? 'selected' : ''; ?>>AJK Wanita</option>
-            <option value="Pemeriksa Kira-Kira" <?php echo (isset($row['role']) && $row['role'] == 'Pemeriksa Kira-Kira') ? 'selected' : ''; ?>>Pemeriksa Kira-Kira</option>
+            <option value="AJK Wanita" <?php echo (isset($row['role']) && $row['role'] == 'AJK Wanita') ? 'selected' : ''; ?>>AJK WANITA</option>
+            <option value="Pemeriksa Kira-Kira" <?php echo (isset($row['role']) && $row['role'] == 'Pemeriksa Kira-Kira') ? 'selected' : ''; ?>>PEMERIKSA KIRA-KIRA</option>
         </select>
     </td>
 
     <td>
-    <button type="submit" name="update_vote" class="btn btn-primary mb-2" value="1">Update Role</button>
+    <button type="submit" name="update_vote" class="btn btn-primary mb-2" value="1">KEMASKINI JAWATAN</button>
     <?php if ($level_id == 4) { ?> 
     <td>
     <form method="POST" action="" onsubmit="return doubleConfirmReject()">
@@ -272,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
     <input type="hidden" name="ic" value="<?= isset($row['ic']) ? htmlspecialchars($row['ic']) : '' ?>">
     <input type="hidden" name="date" value="<?= htmlspecialchars($row['date']) ?>">
 
-    <button type="submit" name="reject" class="btn btn-danger" onclick="return doubleConfirmReject()">Reject</button>
+    <button type="submit" name="reject" class="btn btn-danger" onclick="return doubleConfirmReject()">TOLAK</button>
 </form>
     </td>
 <?php } ?>
@@ -298,19 +299,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
             <input type="hidden" name="users[<?php echo $key; ?>][role]" value="<?php echo isset($row['role']) ? htmlspecialchars($row['role']) : ''; ?>">
             <input type="hidden" name="users[<?php echo $key; ?>][total_vote]" value="<?php echo isset($row['total_vote']) ? htmlspecialchars($row['total_vote']) : '0'; ?>" required>
         <?php endforeach; ?>
-        <button type="submit" name="update_all" class="btn btn-success mb-2">Save and Verify</button>
+        <button type="submit" name="update_all" class="btn btn-success mb-2">SIMPAN DAN SAHKAN</button>
         </form>
     <?php else: ?>
-        <p>No results found for the entered IC.</p>
+        <p>TIADA DATA DIJUMPAI BAGI NO KAD PENGENALAN YANG DIMASUKKAN.</p>
     <?php endif; ?>
     <div class="d-flex justify-content-center gap-2 mt-3">
     <a href="form2_PTA_pdf.php">
-        <button type="button" class="btn btn-primary mb-2">Export to PDF</button>
+        <button type="button" class="btn btn-primary mb-2">EKSPORT KE PDF</button>
     </a>
     <a href="form2_PTA_excel.php">
-        <button type="button" class="btn btn-primary mb-2">Export to Excel</button>
+        <button type="button" class="btn btn-primary mb-2">EKSPORT KE EXCEL</button>
     </a>
-    <button onclick="window.location.href = 'form_JHEPP.php'" class="btn btn-primary mb-2">Back</button>
+    <button onclick="window.location.href = 'mainpage3.php'" class="btn btn-primary mb-2">KEMBALI</button>
 </div>
 
 <?php require '../include/footer.php'; ?>

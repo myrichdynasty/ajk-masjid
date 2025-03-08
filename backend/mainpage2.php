@@ -63,42 +63,42 @@ try {
         <th>TINDAKAN</th>
 </thead>
     </tr>
-    <?php foreach ($bookings as $booking): ?>
-        <tr>
-            <td><?php echo htmlspecialchars($booking['booking_id']); ?></td>
-            <td><?php echo htmlspecialchars($booking['masjid_name']); ?></td>
-            <td><?php echo htmlspecialchars($booking['date']); ?></td>
-            <td>
-                <form action="updatestatus.php" method="POST">
+    <?php if (empty($bookings)): ?>
+        <tr><td colspan="7">TIADA SENARAI BARU DIJUMPAI.</td></tr>
+    <?php else: ?>
+        <?php 
+            $counter = 1;
+            foreach ($bookings as $booking): ?>
+            <tr>
+                <td><?php echo $counter++; ?></td>
+                <td><?php echo htmlspecialchars($booking['masjid_name']); ?></td>
+                <td><?php echo htmlspecialchars($booking['date']); ?></td>
+                <td><form action="updatestatus.php" method="POST">
                     <input type="hidden" name="booking_id" value="<?php echo $booking['booking_id']; ?>">
                     <input type="date" class="form-control" name="date" value="<?php echo htmlspecialchars($booking['date']); ?>">
-            </td>
-            <td><?php echo htmlspecialchars(date('H:i', strtotime($booking['time']))); ?></td>
-            <td>
-                    <input type="time" class="form-control" name="time" value="<?php echo htmlspecialchars($booking['time']); ?>">
-            </td>
-            <td><?php echo htmlspecialchars($booking['place']); ?></td>
-            <td>
+                </td>
+                <td><?php echo htmlspecialchars(date('H:i', strtotime($booking['time']))); ?></td>
+                <td><input type="time" class="form-control" name="time" value="<?php echo htmlspecialchars($booking['time']); ?>"></td>
+                <td><?php echo htmlspecialchars($booking['place']); ?></td>
+                <td>
                     <select class="form-control" name="status_code" style="width: 158px;">
                         <option value="0" <?php echo ($booking['status_code'] == 0) ? 'selected' : ''; ?>>MENUNGGU KELULUSAN</option>
                         <option value="1" <?php echo ($booking['status_code'] == 1) ? 'selected' : ''; ?>>LULUS</option>
                         <option value="2" <?php echo ($booking['status_code'] == 2) ? 'selected' : ''; ?>>TOLAK</option>
                         <option value="3" <?php echo ($booking['status_code'] == 3) ? 'selected' : ''; ?>>DIKEMASKINI</option>
                     </select>
-            </td>
-            <td>
-                    <textarea class="form-control" name="comment" rows="2" cols="20"><?php echo htmlspecialchars($booking['comment']); ?></textarea>
-            </td>
-            <td>
-                1.<?php echo htmlspecialchars($booking['nama_cadangan1']); ?>
-                <br>
-                2.<?php echo htmlspecialchars($booking['nama_cadangan2']); ?></td>
-            <td>
-                    <button type="submit" class="btn btn-primary mb-2">KEMASKINI</button>
+                </td>
+                <td><textarea class="form-control" name="comment" rows="2" cols="20"><?php echo htmlspecialchars($booking['comment']); ?></textarea></td>
+                <td>
+                    1.<?php echo htmlspecialchars($booking['nama_cadangan1']); ?>
+                    <br>
+                    2.<?php echo htmlspecialchars($booking['nama_cadangan2']); ?>
+                </td>
+                <td><button type="submit" class="btn btn-primary mb-2">KEMASKINI</button></td>
                 </form>
-            </td>
-        </tr>
-    <?php endforeach; ?>
+            </tr>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </table>
 
     <?php require '../include/footer.php'; ?>

@@ -11,7 +11,7 @@ require '../include/function.php';
 function fetchAndInsertTopRows($conn, $currentDate, $gender, $limit, $booking_id) {
     // Fetch top rows based on gender and limit
     $stmtSelect = $conn->prepare("
-        SELECT ic, name, gender, date, phone_num, address, job, total_vote, status_code, booking_id
+        SELECT masjid_id, ic, name, gender, date, phone_num, address, job, total_vote, status_code, booking_id
         FROM form
         WHERE DATE(date) = :currentDate AND gender = :gender AND booking_id = :booking_id
         ORDER BY total_vote DESC
@@ -35,9 +35,10 @@ function fetchAndInsertTopRows($conn, $currentDate, $gender, $limit, $booking_id
     // Insert the top rows into `form_2`
     foreach ($topRows as $row) {
         $stmtInsert = $conn->prepare("
-            INSERT INTO form_2 (ic, name, gender, date, phone_num, address, job, total_vote, status_code, booking_id)
-            VALUES (:ic, :name, :gender, :date, :phone, :address, :job, :total_vote, :status_code, :booking_id)
+            INSERT INTO form_2 (masjid_id, ic, name, gender, date, phone_num, address, job, total_vote, status_code, booking_id)
+            VALUES (:masjid_id, :ic, :name, :gender, :date, :phone, :address, :job, :total_vote, :status_code, :booking_id)
         ");
+        $stmtInsert->bindParam(':masjid_id', $row['masjid_id'], PDO::PARAM_STR);
         $stmtInsert->bindParam(':ic', $row['ic'], PDO::PARAM_STR);
         $stmtInsert->bindParam(':name', $row['name'], PDO::PARAM_STR);
         $stmtInsert->bindParam(':gender', $row['gender'], PDO::PARAM_STR);
@@ -81,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
             foreach ($_POST['users'] as $ic => $user) {
                 $name = $user['name'];
                 $gender = $user['gender'];
-                $masjidId = $user['masjid_id'];
+                $masjid_id = $user['masjid_id'];
                 $phone = $user['phone'];
                 $address = $user['address'];
                 $job = $user['job'];
@@ -103,21 +104,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     $updatedVote = $totalVote;
                     $stmt = $conn->prepare("
                         UPDATE form 
-                        SET total_vote = :total_vote, status_code = :status_code, booking_id = :booking_id
+                        SET total_vote = :total_vote, status_code = :status_code
                         WHERE ic = :ic AND DATE(date) = :currentDate
                     ");
                     $stmt->bindParam(':total_vote', $updatedVote, PDO::PARAM_INT);
                     $stmt->bindParam(':status_code', $status, PDO::PARAM_INT);
-                    $stmt->bindParam(':booking_id', $booking_id, PDO::PARAM_STR);
                     $stmt->bindParam(':ic', $ic, PDO::PARAM_STR);
                     $stmt->bindParam(':currentDate', $currentDate, PDO::PARAM_STR);
                     $stmt->execute();
                 } else {
                     // If no record exists, insert new entry into `form`
                     $stmt = $conn->prepare("
-                        INSERT INTO form (ic, name, gender, date, phone_num, address, job, total_vote, status_code, booking_id)
-                        VALUES (:ic, :name, :gender, NOW(), :phone, :address, :job, :total_vote, :status_code, :booking_id)
+                        INSERT INTO form (masjid_id, ic, name, gender, date, phone_num, address, job, total_vote, status_code, booking_id)
+                        VALUES (:masjid_id, :ic, :name, :gender, NOW(), :phone, :address, :job, :total_vote, :status_code, :booking_id)
                     ");
+                    $stmt->bindParam(':masjid_id', $masjid_id, PDO::PARAM_STR);
                     $stmt->bindParam(':ic', $ic, PDO::PARAM_STR);
                     $stmt->bindParam(':name', $name, PDO::PARAM_STR);
                     $stmt->bindParam(':gender', $gender, PDO::PARAM_STR);

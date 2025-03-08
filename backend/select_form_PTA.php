@@ -127,7 +127,7 @@ try {
 
     function redirectToHistory(masjidID) {
         if (masjidID) {
-            window.location.href = "meeting_history.php?masjid_id=" + encodeURIComponent(masjidID);
+            window.location.href = "form2_JHEPP_view.php?masjid_id=" + encodeURIComponent(masjidID);
         }
     }
 

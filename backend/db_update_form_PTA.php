@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                 }
 
                     $name = $user['name'];
-                    $masjidId = $user['masjid_id'];
+                    $masjid_id = $user['masjid_id'];
                     $phone = $user['phone'];
                     $address = $user['address'];
                     $job = $user['job'];
@@ -89,24 +89,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     
                     if ($level_id == 2) {
                         $stmt = $conn->prepare("
-                            INSERT INTO form_2 (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_1)
-                            VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id)
+                            INSERT INTO form_2 (masjid_id, ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_1)
+                            VALUES (:masjid_id, :ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id)
                         ");
                         $verify_id = $verify1; // Set correct value
                     } elseif ($level_id == 3) {
                         $stmt = $conn->prepare("
-                            INSERT INTO form_2 (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_2)
-                            VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id)
+                            INSERT INTO form_2 (masjid_id, ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_2)
+                            VALUES (:masjid_id, :ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id)
                         ");
                         $verify_id = $verify2;
                     } else {
                         $stmt = $conn->prepare("
-                            INSERT INTO form_2 (ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_3)
-                            VALUES (:ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id)
+                            INSERT INTO form_2 (masjid_id, ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_3)
+                            VALUES (:masjid_id, :ic, :name, NOW(), :phone, :address, :job, :total_vote, :status_code, :role, :verify_id)
                         ");
                         $verify_id = $verify3;
                     }
                 
+                    $stmt->bindParam(':masjid_id', $ic, PDO::PARAM_STR);
                     $stmt->bindParam(':ic', $ic, PDO::PARAM_STR);
                     $stmt->bindParam(':name', $name, PDO::PARAM_STR);
                     $stmt->bindParam(':phone', $phone, PDO::PARAM_STR);
@@ -131,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
             $_SESSION['search_results'] = [];
 
             // Redirect to meeting_PTA.php after successful insertion
-            header("Location: form_PTA.php"); 
+            header("Location: " . $_SERVER['HTTP_REFERER']); 
             exit();
 
         } catch (PDOException $e) {
