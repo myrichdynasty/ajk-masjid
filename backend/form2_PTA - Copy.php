@@ -143,6 +143,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
     }
 }
 
+try {
+    // Get the Masjid Name
+    $stmtMasjid = $conn->prepare("SELECT masjid_name FROM masjid WHERE masjid_id = $masjid_id");
+    $stmtMasjid->execute();
+    $masjidData = $stmtMasjid->fetch(PDO::FETCH_ASSOC);
+
+    if (!$masjidData) {
+        die("Error: Masjid not found.");
+    }
+    $masjidName = $masjidData['masjid_name'];
+} catch (PDOException $e) {
+    die("Error fetching data: " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -155,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
 <body>
 <?php require '../include/header.php'; ?>
 <div class="container d-flex flex-column align-items-center justify-content-center min-vh-80">
-    <h1 class="text-center mb-4">MASJID JAMEK AL-HIDAYAH</h1>
+    <h1 class="text-center mb-4"><?php echo htmlspecialchars($masjidName); ?></h1>
     <h1 class="text-center mb-4">MESYUARAT AGUNG PENCALONAN JAWATANKUASA BAGI PENGGAL 2025-2028</h1>
 
     <div class="table-responsive">
@@ -298,10 +311,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
                 <input type="text" class="form-control" id="meeting_place" name="meeting_place" placeholder="Enter location" required>
             </div>
 
-            <div class="mb-3">
-                <label for="meeting_part" class="form-label">AHLI MESYUARAT (comma-separated):</label>
-                <textarea class="form-control" id="meeting_part" name="meeting_part" rows="3" placeholder="Enter participant names separated by commas" required></textarea>
+            <!-- <div class="mb-3">
+                <label for="meeting_nama_ahli" class="form-label">AHLI MESYUARAT:<br>NAMA</label>
+                <textarea class="form-control" id="meeting_nama_ahli" name="meeting_nama_ahli" placeholder="Enter participant name" required></textarea>
             </div>
+            <div class="mb-3">
+                <label for="meeting_jabatanAhli" class="form-label">JABATAN</label>
+                <textarea class="form-control" id="meeting_jabatanAhli" name="meeting_jabatanAhli" placeholder="Enter participant jabatan" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="meeting_jawatanAhli" class="form-label">JAWATAN</label>
+                <textarea class="form-control" id="meeting_jawatanAhli" name="meeting_jawatanAhli" placeholder="Enter participant jawatan" required></textarea>
+            </div> -->
+            <div id="sections">
+                <div class="section">
+                    <fieldset>
+                        <legend>MAKLUMAT AHLI MESYUARAT:</legend>
+                        <p>
+                            <label for="meeting_nama_ahli">NAMA:</label>
+                            <input class="form-control" name="meeting_nama_ahli" id="meeting_nama_ahli" value="" type="text" required/>
+                        </p>
+                        <p>
+                            <label for="meeting_jabatanAhli">JABATAN:</label>
+                            <input class="form-control" name="meeting_jabatanAhli" id="meeting_jabatanAhli" value="" type="text" required/>
+                        </p>
+                        <p>
+                            <label for="meeting_jawatanAhli">JAWATAN:</label>
+                            <input class="form-control" name="meeting_jawatanAhli" id="meeting_jawatanAhli" value="" type="text" required/>
+                        </p>
+                        <p><a href="#" class='remove'>Remove Section</a></p>
+
+                    </fieldset>
+                </div>
+            </div>
+            <p><a href="#" class='addsection'>Add Section</a></p>
 
             <div class="export-buttons text-center">
                 <button type="submit" name="update_all" class="btn btn-primary mb-2">HANTAR</button>
@@ -315,3 +358,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
     <?php require '../include/footer.php'; ?>
 </body>
 </html>
+
+<script src="js/jquery.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+    //define template
+    var template = $('#sections .section:first').clone();
+
+    //define counter
+    var sectionsCount = 1;
+
+    //add new section
+    $('body').on('click', '.addsection', function() {
+
+        //increment
+        sectionsCount++;
+
+        //loop through each input
+        var section = template.clone().find(':input').each(function(){
+
+            //set id to store the updated section number
+            var newId = this.id + sectionsCount;
+
+            //update for label
+            $(this).prev().attr('for', newId);
+
+            //update id
+            this.id = newId;
+
+        }).end()
+
+        //inject new section
+        .appendTo('#sections');
+        return false;
+    });
+
+    //remove section
+    $('#sections').on('click', '.remove', function() {
+        //fade out section
+        $(this).parent().fadeOut(300, function(){
+            //remove parent element (main section)
+            $(this).parent().parent().empty();
+            return false;
+        });
+        return false;
+    });
+</script>

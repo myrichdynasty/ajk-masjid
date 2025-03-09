@@ -1,6 +1,7 @@
 <?php
 session_start();
 include('connection.php');
+
 date_default_timezone_set('Asia/Kuala_Lumpur'); // Set timezone to GMT+8
 $currentDate = date('Y-m-d'); // Store only the date (YYYY-MM-DD)
 
