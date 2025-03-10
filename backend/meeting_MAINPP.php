@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'masjid_id' => $masjid_id
                 ]);
             }
-            echo "<script>alert('MAKLUMAT MESYUARAT BERJAYA DITAMBAH!'); window.location.href='form_PTA.php';</script>";
+            echo "<script>alert('Meeting added successfully!'); window.location.href='mainpage4.php';</script>";
         } catch (PDOException $e) {
             echo "<script>alert('Error: " . addslashes($e->getMessage()) . "');</script>";
         }
