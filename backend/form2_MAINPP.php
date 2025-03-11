@@ -9,28 +9,23 @@ if (!isset($_SESSION['search_results'])) {
     $_SESSION['search_results'] = [];
 }
 
-// Retrieve masjid_id from URL
+$level_id = $_SESSION['ulevel'];
 $masjid_id = isset($_GET['masjid_id']) ? intval($_GET['masjid_id']) : null;
 
-// Set timezone to GMT+8
 date_default_timezone_set('Asia/Kuala_Lumpur');
-
-// Get the first and last day of the current month
-$firstDay = date('Y-m-01'); // Example: 2024-02-01
-$lastDay = date('Y-m-t');   // Example: 2024-02-29
+$firstDay = date('Y-m-01');
+$lastDay = date('Y-m-t');
 $current_date = date('Y-m-d'); // Get current date and time in GMT+8
 
-// Query to check if a form exists in the month
-$sql = "SELECT f.*, u.nama_penuh AS name, u.no_ic AS ic, u.no_hp AS phone, 
-        u.alamat_terkini AS address, u.pekerjaan AS job, u.id_masjid AS masjid_id, m.masjid_name
+$sql = "SELECT f.*, u.nama_penuh AS name, u.no_ic AS ic, u.no_hp AS phone, u.alamat_terkini AS address, 
+        u.pekerjaan AS job, u.id_masjid AS masjid_id, m.masjid_name
         FROM form_2 f 
         JOIN sej6x_data_peribadi u ON f.ic = u.no_ic
         JOIN masjid m ON u.id_masjid = m.masjid_id 
         WHERE DATE(f.reg_date) BETWEEN :firstdate AND :lastdate
-        AND m.masjid_id = :masjid_id 
+        AND m.masjid_id = :masjid_id AND f.status_code != 5 
         ORDER BY f.total_vote DESC";
 
-// Generate debug query by replacing placeholders with actual values
 $debug_sql = str_replace(
     [':firstdate', ':lastdate', ':masjid_id'],
     ["'$firstDay'", "'$lastDay'", "'$masjid_id'"],
@@ -67,19 +62,42 @@ try {
     die("Error: " . $e->getMessage());
 }
 
-// Append today's forms to search_results, avoiding duplicates
 $existingICs = array_column($_SESSION['search_results'], 'ic');
-
 foreach ($forms as &$form) {
     if (!isset($form['total_vote'])) { 
-        $form['total_vote'] = 0; // Ensure total_vote is always set
+        $form['total_vote'] = 0;
     }
     if (!in_array($form['ic'], $existingICs)) {
         $_SESSION['search_results'][] = $form;
     }
 }
 
-// Handle search request
+if ($level_id == 4 && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reject'])) {
+    if (isset($_POST['ic']) && !empty($_POST['ic'])) {
+        $ic = $_POST['ic'];
+        $date = $_POST['date'];
+        $form = $_POST['form_id'];
+
+        try {
+            $stmt = $conn->prepare("UPDATE form_2 f SET f.status_code = 5 WHERE f.ic = :ic AND f.date = :form_date");
+            $stmt->execute([
+                'ic' => $ic,
+                'form_date' => $date
+            ]);            
+            if (isset($_SESSION['search_results'])) {
+                foreach ($_SESSION['search_results'] as $index => $user) {
+                    if ($user['ic'] == $ic) {
+                        unset($_SESSION['search_results'][$index]);
+                        $_SESSION['search_results'] = array_values($_SESSION['search_results']);
+                        break;
+                    }
+                }
+            }
+        } catch (PDOException $e) {
+        }
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_ic'])) {
     $searchIC = trim($_POST['search_ic']);
 
@@ -94,18 +112,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_ic'])) {
     
             if ($results) {
                 foreach ($results as &$user) {
-                    // Check if the masjid_id is different
                     if ($user['masjid_id'] != $masjid_id) {
                         echo "<script>alert('Anda Bukan Ahli Qaryah');</script>";
-                        continue; // Skip adding this user
+                        continue;
                     }
     
-                    // Ensure total_vote is set
                     if (!isset($user['total_vote'])) { 
                         $user['total_vote'] = 0;
                     }
     
-                    // Check for duplicates before adding
                     $existingICs = array_column($_SESSION['search_results'], 'ic');
                     if (!in_array($user['ic'], $existingICs)) {
                         $_SESSION['search_results'][] = $user;
@@ -163,10 +178,12 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BORANG PENCALONAN 2 PTA</title>
+    <title>BORANG PENCALONAN 2 JHEPP / MIPP</title>
+    <script src="../Script/reject.js"></script>
 </head>
 <body>
 <?php require '../include/header.php'; ?>
+
 <div class="container d-flex flex-column align-items-center justify-content-center min-vh-80">
     <h1 class="text-center mb-4"><?php echo htmlspecialchars($masjidName); ?></h1>
     <h1 class="text-center mb-4">MESYUARAT AGUNG PENCALONAN JAWATANKUASA BAGI PENGGAL 2025-2028</h1>
@@ -200,7 +217,6 @@ try {
         </table>
     </div>
 
-    <!-- Search section -->
     <div class="search-section text-center mb-4">
         <form method="POST" action="" class="d-flex justify-content-center align-items-center gap-2 w-100 mx-auto">
             <div class="d-flex align-items-center">
@@ -210,7 +226,6 @@ try {
             <button type="submit" class="btn btn-primary">CARI</button>
         </form>
     </div>
-
     <?php if (!empty($_SESSION['search_results'])): ?>
         <h2>HASIL CARIAN:</h2>
         <table class="table table-bordered text-center">
@@ -225,12 +240,14 @@ try {
                     <th>JUMLAH UNDI</th>
                     <th>JAWATAN</th>
                     <th>TINDAKAN</th>
+                    <?php if ($level_id == 4) { ?> 
+                    <th>KELULUSAN</th>
+                    <?php } ?>
                 </tr>
             </thead>
             <tbody>
-                <?php
-                $counter = 1; // Initialize counter
-                foreach ($_SESSION['search_results'] as $row): ?>
+                <?php $counter = 1; ?>
+                <?php foreach ($_SESSION['search_results'] as $row): ?>
                     <tr>
                         <td><?php echo $counter++; ?></td>
                         <td><?php echo htmlspecialchars($row['name']); ?></td>
@@ -253,25 +270,38 @@ try {
                             </td>
                             <?php endif; ?>
                         <td>
-                            <!-- Ensure role exists, default to "Please select a role" -->
                             <select class="form-control" style="width: 158px;" name="role">
-                                <option value="" disabled <?php echo (!isset($row['role']) || empty($row['role'])) ? 'selected' : ''; ?>>SILA PILIH JAWATAN</option>
+                                <option value="" disabled <?php echo (!isset($row['role']) || empty($row['role'])) ? 'selected' : ''; ?>>SILA PILIH JAWATAN:</option>
                                 <option value="PENGERUSI" <?php echo (isset($row['role']) && $row['role'] == 'PENGERUSI') ? 'selected' : ''; ?>>PENGERUSI</option>
                                 <option value="TIMBALAN PENGERUSI" <?php echo (isset($row['role']) && $row['role'] == 'TIMBALAN PENGERUSI') ? 'selected' : ''; ?>>TIMBALAN PENGERUSI</option>
-                                <option value="SETIAUSAHA" <?php echo (isset($row['role']) && $row['role'] == 'SETIAUSAHA') ? 'selected' : ''; ?>>SETIAUSAHA</option>
+                                <option value="SETIAUSAHA" <?php echo (isset($row['role']) && $row['role'] == 'SETIAUSAHA') ? 'selected' : ''; ?>>SETIAUSHA</option>
                                 <option value="BENDAHARI" <?php echo (isset($row['role']) && $row['role'] == 'BENDAHARI') ? 'selected' : ''; ?>>BENDAHARI</option>
                                 <option value="AJK" <?php echo (isset($row['role']) && $row['role'] == 'AJK') ? 'selected' : ''; ?>>AJK</option>
                                 <option value="AJK WANITA" <?php echo (isset($row['role']) && $row['role'] == 'AJK WANITA') ? 'selected' : ''; ?>>AJK WANITA</option>
                                 <option value="PEMERIKSA KIRA-KIRA" <?php echo (isset($row['role']) && $row['role'] == 'PEMERIKSA KIRA-KIRA') ? 'selected' : ''; ?>>PEMERIKSA KIRA-KIRA</option>
                             </select>
                         </td>
-                        <td><button type="submit" name="update_vote" class="btn btn-primary mb-2" value="1">KEMASKINI JAWATAN</button></td>
+                        <td>
+                            <button type="submit" name="update_vote" class="btn btn-primary mb-2" value="1">KEMASKINI JAWATAN</button>
+                            <?php if ($level_id == 4) { ?> 
+                            <td>
+                                <form method="POST" action="" onsubmit="return doubleConfirmReject()">
+                                    <?php if (!empty($row['form_id'])): ?>
+                                        <input type="hidden" name="form_id" value="<?= htmlspecialchars($row['form_id']) ?>">
+                                    <?php endif; ?>  
+                                    <input type="hidden" name="ic" value="<?= isset($row['ic']) ? htmlspecialchars($row['ic']) : '' ?>">
+                                    <!-- <input type="hidden" name="date" value="<?= htmlspecialchars($row['date']) ?>"> -->
+                                    <button type="submit" name="reject" class="btn btn-danger" onclick="return doubleConfirmReject()">TOLAK</button>
+                                </form>
+                            </td>
+                            <?php } ?>
+                        </td>
                         </form>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <form method="POST" action="db_update_form_PTA.php">
+        <form method="POST" action="db_update_form_JHEPP.php">
             <?php foreach ($_SESSION['search_results'] as $row): ?>
                 <?php $key = isset($row['form_id']) ? $row['form_id'] : $row['ic']; ?>
                 <input type="hidden" name="users[<?php echo $key; ?>][ic]" value="<?php echo htmlspecialchars($row['ic']); ?>">
@@ -284,18 +314,15 @@ try {
                 <input type="hidden" name="users[<?php echo $key; ?>][role]" value="<?php echo isset($row['role']) ? htmlspecialchars($row['role']) : ''; ?>">
                 <input type="hidden" name="users[<?php echo $key; ?>][total_vote]" value="<?php echo isset($row['total_vote']) ? htmlspecialchars($row['total_vote']) : '0'; ?>" required>
             <?php endforeach; ?>
-
-            <div class="export-buttons text-center">
-                <button type="submit" name="update_all" class="btn btn-primary mb-2">SIMPAN</button>
-            </div>
+            <button type="submit" name="update_all" class="btn btn-success mb-2">SIMPAN</button>
         </form>
     <?php else: ?>
-        <p>TIADA KEPUTUSAN DIJUMPAI UNTUK TARIKH YANG DIBERIKAN.</p>
+        <p>TIADA DATA DIJUMPAI BAGI NO KAD PENGENALAN YANG DIMASUKKAN.</p>
     <?php endif; ?>
 
     <div class="container">
-        <h2>MAKLUMAT MESYAURAT - PTA</h2>
-        <form method="POST" action="meeting_PTA.php" id="meetingForm">
+        <h2>MAKLUMAT MESYAURAT - JHEIPP/MAINPP</h2>
+        <form method="POST" action="meeting_MAINPP.php" id="meetingForm">
             <div class="mb-3">
                 <label for="meeting_date" class="form-label">TARIKH MESYUARAT:</label>
                 <input type="date" class="form-control" id="meeting_date" name="meeting_date" required>
@@ -341,10 +368,17 @@ try {
         </form>
     </div>
 
-    <div class="export-buttons text-center">
-        <button onclick="window.location.href = 'form_PTA.php'" class="btn btn-primary mb-2">KEMBALI</button>
+    <div class="d-flex justify-content-center gap-2 mt-3">
+        <a href="form2_PTA_pdf.php">
+            <button type="button" class="btn btn-primary mb-2">EKSPORT KE PDF</button>
+        </a>
+        <a href="form2_PTA_excel.php">
+            <button type="button" class="btn btn-primary mb-2">EKSPORT KE EXCEL</button>
+        </a>
+        <button onclick="window.location.href = 'mainpage3.php'" class="btn btn-primary mb-2">KEMBALI</button>
     </div>
-    <?php require '../include/footer.php'; ?>
+</div>
+<?php require '../include/footer.php'; ?>
 </body>
 </html>
 

@@ -83,6 +83,24 @@ try {
     die("Error: " . $e->getMessage());
 }
 
+// Group meetings by date, time, and place
+$groupedMeetings = [];
+foreach ($meetings as $meetingGroup) {
+    $key = $meetingGroup['meeting_date'] . '|' . $meetingGroup['meeting_time'] . '|' . $meetingGroup['meeting_place'];
+    if (!isset($groupedMeetings[$key])) {
+        $groupedMeetings[$key] = [
+            'meeting_date' => $meetingGroup['meeting_date'],
+            'meeting_time' => $meetingGroup['meeting_time'],
+            'meeting_place' => $meetingGroup['meeting_place'],
+            'attendees' => [],
+        ];
+    }
+    $groupedMeetings[$key]['attendees'][] = [
+        'meeting_nama_ahli' => $meetingGroup['meeting_nama_ahli'],
+        'meeting_jawatanAhli' => $meetingGroup['meeting_jawatanAhli'],
+        'meeting_jabatanAhli' => $meetingGroup['meeting_jabatanAhli'],
+    ];
+}
 ?>
 
 <!DOCTYPE html>
@@ -127,31 +145,48 @@ try {
     <div class="table-responsive">
         <table class="table table-bordered text-center">
             <thead class="table-primary text-white">
-        <tr>
-            <th>TARIKH</th>
-            <th>MASA</th>
-            <th>TEMPAT</th>
-            <th>NAMA AHLI MESYUARAT</th>
-            <th>JAWATAN</th>
-            <th>JABATAN</th>
-    </thead>
-    </tbody>
-        </tr>
-        <?php if (empty($meeting)): ?>
-            <tr><td colspan="7">TIADA DATA DIJUMPAI.</td></tr>
-        <?php else: ?>
-            <tr>
-                <td><?php echo htmlspecialchars($meeting['date']); ?></td>
-                <td><?php echo date('H:i', strtotime($meeting['time'])); ?></td>
-                <td><?php echo htmlspecialchars($meeting['place']); ?></td>
-                <td>
-                    1.<?php echo htmlspecialchars($meeting['nama_cadangan1']); ?>
-                    <br>
-                    2.<?php echo htmlspecialchars($meeting['nama_cadangan2']); ?>
-                </td>
-            </tr>
-        <?php endif; ?>
-    </table>
+                <tr>
+                    <th>TARIKH</th>
+                    <th>MASA</th>
+                    <th>TEMPAT</th>
+                    <th>NAMA AHLI MESYUARAT</th>
+                    <th>JAWATAN</th>
+                    <th>JABATAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($groupedMeetings)): ?>
+                    <tr>
+                        <td colspan="6">TIADA DATA DIJUMPAI.</td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($groupedMeetings as $group): ?>
+                        <?php $rowCount = count($group['attendees']); ?>
+                        <?php foreach ($group['attendees'] as $index => $attendee): ?>
+                            <tr>
+                                <?php if ($index === 0): ?>
+                                    <!-- Display meeting details only in the first row -->
+                                    <td rowspan="<?php echo $rowCount; ?>">
+                                        <?php echo htmlspecialchars($group['meeting_date']); ?>
+                                    </td>
+                                    <td rowspan="<?php echo $rowCount; ?>">
+                                        <?php echo date('H:i', strtotime($group['meeting_time'])); ?>
+                                    </td>
+                                    <td rowspan="<?php echo $rowCount; ?>">
+                                        <?php echo htmlspecialchars($group['meeting_place']); ?>
+                                    </td>
+                                <?php endif; ?>
+                                <!-- Display attendee details -->
+                                <td><?php echo htmlspecialchars($attendee['meeting_nama_ahli']); ?></td>
+                                <td><?php echo htmlspecialchars($attendee['meeting_jawatanAhli']); ?></td>
+                                <td><?php echo htmlspecialchars($attendee['meeting_jabatanAhli']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 
     <?php if (!empty($searchResults)): ?>
         <div class="table-responsive">

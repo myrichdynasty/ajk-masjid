@@ -70,13 +70,13 @@ foreach ($masjids as $masjid) {
                             <li style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #ccc;">
                                 <span class="masjid-name" style="flex: 1;"><?php echo !empty($masjid['masjid_name']) ? htmlspecialchars($masjid['masjid_name']) : '-'; ?></span>
                                 <div class="button-group" style="display: flex; gap: 10px;">
-                                    <a href="../backend/form1_JHEPP.php?masjid_id=<?php echo $masjid['masjid_id']; ?>" class="mb-2 ml-2">
+                                    <a href="../backend/form1_MAINPP.php?masjid_id=<?php echo $masjid['masjid_id']; ?>" class="mb-2 ml-2">
                                         <button type="button" class="btn btn-primary">BORANG PENCALONAN 1 <?php if($masjid['form_1'] > 0){ ?><span class="badge bg-danger"><?php echo "Baru"; ?></span><?php } ?></button>
                                     </a>
-                                    <a href="../backend/form2_JHEPP.php?masjid_id=<?php echo $masjid['masjid_id']; ?>" class="mb-2 ml-2">
+                                    <a href="../backend/form2_MAINPP.php?masjid_id=<?php echo $masjid['masjid_id']; ?>" class="mb-2 ml-2">
                                         <button type="button" class="btn btn-primary">BORANG PENCALONAN 2 <?php if($masjid['form_2'] > 0){ ?><span class="badge bg-danger"><?php echo "Baru"; ?></span><?php } ?></button>
                                     </a>
-                                    <a href="../backend/form2_JHEPP_view.php?masjid_id=<?php echo $masjid['masjid_id']; ?>" class="mb-2 ml-2">
+                                    <a href="../backend/form2_MAINPP_view.php?masjid_id=<?php echo $masjid['masjid_id']; ?>" class="mb-2 ml-2">
                                         <button type="button" class="btn btn-primary">VIEW<?php if($masjid['form_2'] > 0){ ?><span class="badge bg-danger"><?php echo "Baru"; ?></span><?php } ?></button>
                                     </a>
                                 </div>

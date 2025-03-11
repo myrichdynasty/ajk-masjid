@@ -1,4 +1,7 @@
 <?php
+// Start output buffering
+ob_start();
+
 session_start();
 include('connection.php');
 
@@ -10,7 +13,7 @@ $user_id = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
     if (isset($_POST['users']) && is_array($_POST['users'])) {
-        echo "<pre style='color: blue;'>DEBUG: Received Data:</pre>";
+        echo "<pre style='color: blue;'>DEBUG: DATA DITERIMA:</pre>";
         echo "<pre>";
         print_r($_POST['users']);  // Debug: Show all sent data
         echo "</pre>";
@@ -28,17 +31,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     $ic = $key; // Key is the `ic`
                 }
 
-                    $name = $user['name'];
-                    $masjid_id = $user['masjid_id'];
-                    $phone = $user['phone'];
-                    $address = $user['address'];
-                    $job = $user['job'];
-                    $totalVote = intval($user['total_vote']);
-                    $role = $user['role'];
-                    $status = $level_id;
-                    $verify1 = $user_id;
-                    $date = date('Y-m-d', strtotime($user['reg_date']));
-                    
+                $name = $user['name'];
+                $masjid_id = $user['masjid_id'];
+                $phone = $user['phone'];
+                $address = $user['address'];
+                $job = $user['job'];
+                $totalVote = intval($user['total_vote']);
+                $role = $user['role'];
+                $status = $level_id;
+                $verify1 = $user_id;
+                $verify2 = $user_id;
+                $verify3 = $user_id;
+                $date = date('Y-m-d', strtotime($user['reg_date']));
+
                 // Check if an entry with the same IC and date exists
                 $stmt = $conn->prepare("
                     SELECT form_id, total_vote FROM form_2 
@@ -54,31 +59,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
 
                     // If record exists, update total_vote and status_code
                     $updatedVote = $totalVote;
-                    if($level_id == 2){
+                    if ($level_id == 2) {
                         $stmt = $conn->prepare("
-                        UPDATE form_2 
-                        SET total_vote = :total_vote, status_code = :status_code, verify_id_1 = :user_id, role = :role
-                        WHERE form_id = :form_id
-                    ");
-                    $stmt->bindParam(':user_id', $verify1, PDO::PARAM_INT);
-                    }
-                    elseif($level_id == 3){
+                            UPDATE form_2 
+                            SET total_vote = :total_vote, status_code = :status_code, verify_id_1 = :user_id, role = :role
+                            WHERE form_id = :form_id
+                        ");
+                        $stmt->bindParam(':user_id', $verify1, PDO::PARAM_INT);
+                    } elseif ($level_id == 3) {
                         $stmt = $conn->prepare("
-                        UPDATE form_2 
-                        SET total_vote = :total_vote, status_code = :status_code, verify_id_2 = :user_id, role = :role
-                        WHERE form_id = :form_id
-                    ");
-                    $stmt->bindParam(':user_id', $verify1, PDO::PARAM_INT);
-                    }
-                    else{
+                            UPDATE form_2 
+                            SET total_vote = :total_vote, status_code = :status_code, verify_id_2 = :user_id, role = :role
+                            WHERE form_id = :form_id
+                        ");
+                        $stmt->bindParam(':user_id', $verify2, PDO::PARAM_INT);
+                    } else {
                         $stmt = $conn->prepare("
-                        UPDATE form_2 
-                        SET total_vote = :total_vote, status_code = :status_code, verify_id_3 = :user_id, role = :role
-                        WHERE form_id = :form_id
-                    ");
-                    $stmt->bindParam(':user_id', $verify1, PDO::PARAM_INT);
+                            UPDATE form_2 
+                            SET total_vote = :total_vote, status_code = :status_code, verify_id_3 = :user_id, role = :role
+                            WHERE form_id = :form_id
+                        ");
+                        $stmt->bindParam(':user_id', $verify3, PDO::PARAM_INT);
                     }
-                  
 
                     $stmt->bindParam(':total_vote', $updatedVote, PDO::PARAM_INT);
                     $stmt->bindParam(':status_code', $status, PDO::PARAM_INT);
@@ -87,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     $stmt->execute();
                 } else {
                     // If no record exists, insert a new entry
-                    
                     if ($level_id == 2) {
                         $stmt = $conn->prepare("
                             INSERT INTO form_2 (masjid_id, ic, name, date, phone_num, address, job, total_vote, status_code, role, verify_id_1)
@@ -107,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                         ");
                         $verify_id = $verify3;
                     }
-                
+
                     $stmt->bindParam(':masjid_id', $ic, PDO::PARAM_STR);
                     $stmt->bindParam(':ic', $ic, PDO::PARAM_STR);
                     $stmt->bindParam(':name', $name, PDO::PARAM_STR);
@@ -118,14 +119,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     $stmt->bindParam(':status_code', $status, PDO::PARAM_INT);
                     $stmt->bindParam(':role', $role, PDO::PARAM_STR);
                     $stmt->bindParam(':verify_id', $verify_id, PDO::PARAM_INT);
-                
+
                     // Execute the statement
                     $stmt->execute();
-                }                
+                }
             }
 
             $conn->commit(); // Commit transaction
-            echo "<pre style='color: green;'>Data successfully processed!</pre>";
+            echo "<pre style='color: green;'>DATA CALON BERJAYA DIPROSES!</pre>";
 
             $_SESSION['forwarded_data'] = $_POST;
 
@@ -133,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
             $_SESSION['search_results'] = [];
 
             // Redirect to meeting_PTA.php after successful insertion
-            header("Location: " . $_SERVER['HTTP_REFERER']); 
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
 
         } catch (PDOException $e) {
@@ -141,7 +142,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
             echo "<pre style='color: red;'>Error inserting/updating data: " . $e->getMessage() . "</pre>";
         }
     } else {
-        echo "<pre style='color: red;'>No users data received!</pre>";
+        echo "<pre style='color: red;'>TIADA DATA CALON DITERIMA!</pre>";
     }
 }
+
+// End output buffering and flush the buffer
+ob_end_flush();
 ?>
